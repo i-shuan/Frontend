@@ -1,0 +1,12 @@
+.animated-text span {
+    opacity: 0;
+    animation: appear 5s forwards;
+    animation-delay: calc(var(--index) * 0.2s);
+    font-size: 2.5rem !important;
+  }
+  
+  @keyframes appear {
+    to {
+      opacity: 1;
+    }
+  }

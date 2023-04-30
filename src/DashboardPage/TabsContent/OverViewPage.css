@@ -1,0 +1,106 @@
+
+.summary-card-container {
+
+  margin-left: 0.5rem;
+  width: 30%;
+  border-radius: 1rem;
+  box-shadow: 0 13px 27px -5px rgba(50, 50, 93, 0.25), 0 8px 16px -8px rgba(0, 0, 0, 0.3);
+}
+
+.summary-card-container .ant-card-head {
+  height: 3rem !important;
+}
+
+.summary-card-container .ant-card-head-title {
+  text-align: left;
+  
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #000;
+  /* text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5) !important; */
+}
+
+
+.summary-card-position {
+  display: flex ;
+  flex-wrap: wrap ;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  gap: 0.5rem;
+  padding: 0 1rem;
+}
+
+
+.summary-card {
+  border-radius: 1rem;
+  /* margin-bottom: 1rem;
+  padding: 0.5rem; */
+  width: 12rem;
+  height: 5rem;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.4), 0px 7px 13px -3px rgba(0, 0, 0, 0.3), inset 0px -3px 0px rgba(0, 0, 0, 0.2);
+}
+
+
+
+.summary-card .ant-card-body {
+  
+  padding-top: 0rem !important;
+  /* backdrop-filter: blur(5px);
+  background-color: rgba(255, 255, 255, 0.1)!important;
+  border: 2px solid rgba(255, 255, 255, 0.3)!important; */
+  border-radius: 1rem !important;
+  text-align: right;
+  /* padding: 0 !important; */
+  margin-top: -1.5rem;
+ 
+}
+
+.summary-card .ant-card-body p{
+  margin-right: 1rem !important;
+  font-weight: 600 !important;
+} 
+
+.summary-card .ant-card-bordered {
+  border: none;
+}
+
+.summary-card .ant-card-head-title {
+  text-align: left;
+  min-height: 1rem !important;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #fff;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5) !important;
+}
+
+.summary-card .ant-card-head {
+  border-bottom: none;
+}
+
+.summary-card:nth-child(1) {
+  background-color: rgb(188, 199, 214)!important;
+  color: #fff;
+}
+
+.summary-card:nth-child(2) {
+  background-color: rgb(148, 167, 192)!important;
+  color: #fff;
+}
+
+.summary-card:nth-child(3) {
+  background-color: rgb(147, 168, 195)!important;
+  color: #fff;
+}
+
+.summary-card:nth-child(4) {
+  background-color: rgb(111, 142, 184) !important;
+  color: #fff;
+}
+
+.above-container {
+  display: flex;
+  margin-top: 1rem;
+  flex-wrap: row;
+  gap: 2rem;
+}
