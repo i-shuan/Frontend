@@ -14,9 +14,9 @@
 .summary-card-container .ant-card-head-title {
   text-align: left;
   
-  font-size: 1.25rem;
+  font-size: 1.125rem;
   font-weight: 600;
-  color: #000;
+  color: #192975;
   /* text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5) !important; */
 }
 
@@ -27,7 +27,7 @@
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  gap: 0.5rem;
+  gap: 0.25rem;
   padding: 0 1rem;
 }
 
@@ -98,9 +98,16 @@
   color: #fff;
 }
 
-.above-container {
+.upper-container {
   display: flex;
   margin-top: 1rem;
+  flex-wrap: row;
+  gap: 2rem;
+}
+
+.lower-container {
+  display: flex;
+  margin-top: 0.5rem;
   flex-wrap: row;
   gap: 2rem;
 }

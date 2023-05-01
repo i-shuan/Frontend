@@ -4,6 +4,7 @@ import { SearchOutlined } from '@ant-design/icons';
 import './OverViewPage.css';
 import ChartCard from './ChartCard';
 import MismatchList from "./MismatchList";
+import OverViewTable from "./OverViewTable";
 
 const SummaryCard = ({ title, description, backgroundColor }) => {
     console.log("description", description)
@@ -28,7 +29,7 @@ const SummaryCard = ({ title, description, backgroundColor }) => {
   const OverViewPage = () => {
     return (
       <div className="overview-page">
-        <div className="above-container">
+        <div className="upper-container">
           <Card className="summary-card-container" size="small" title="Summary">
             <div className="summary-card-position">
               {cardItems.map((card) => (
@@ -43,6 +44,9 @@ const SummaryCard = ({ title, description, backgroundColor }) => {
           </Card>
           <ChartCard />
           <MismatchList/>
+        </div>
+        <div className='lower-container'>
+            <OverViewTable/>
         </div>
       </div>
     );

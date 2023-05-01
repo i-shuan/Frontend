@@ -3,6 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "ag-grid-community": "^29.3.3",
+    "ag-grid-react": "^29.3.3",
     "antd": "^5.4.6",
     "cra-template": "1.2.0",
     "echarts": "^5.4.2",
@@ -12,7 +14,8 @@
     "react-infinite-scroll-component": "^6.1.0",
     "react-router-dom": "^6.10.0",
     "react-scripts": "5.0.1",
-    "react-spring": "^9.7.1"
+    "react-spring": "^9.7.1",
+    "virtuallist-antd": "^0.7.6"
   },
   "scripts": {
     "start": "react-scripts start",

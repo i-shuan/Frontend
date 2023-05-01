@@ -3,7 +3,7 @@ import { Card, Tabs, Input } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 
 import './DashboardPage.css';
-import OverViewPage from "./TabsContent/OverViewPage"
+import OverViewPage from "./OverViewComponent/OverViewPage"
 const { TabPane } = Tabs;
 
 const DashboardPage = () => {
@@ -14,7 +14,7 @@ const DashboardPage = () => {
   ];
 
   return (
-    <Card className="dashboard-card"> 
+    <Card className="dashboard-card dashboard-card-content"> 
       <div className="search-container">
         <Input className="search-input" placeholder="Search Tool Type..." prefix={<SearchOutlined className='search-icon' />} />
       </div>
