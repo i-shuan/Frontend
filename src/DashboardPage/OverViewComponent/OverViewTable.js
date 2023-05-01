@@ -1,9 +1,8 @@
 import React, { useState, useMemo, useCallback, useEffect } from "react";
 import { Table, Input } from "antd";
 import { VList, scrollTo} from "virtuallist-antd";
+
 const pageSize = 50;
-
-
 const columns = [
     {
       title: "Name",
@@ -31,7 +30,7 @@ const generateData = (count) => {
   return data;
 };
 
-const dataFromJSON = generateData(150);
+const dataFromJSON = generateData(2000);
 
 
 const OverViewTable = () => {
@@ -42,6 +41,8 @@ const OverViewTable = () => {
   const [filter, setFilter] = useState("");
   const [currentStart, setCurrentStart] = useState(0);
   console.log("currentStart", currentStart)
+
+  //Column Definition
   const renderedColumns = columns.map((column) => {
     const { title, dataIndex, width} = column;
   
@@ -63,37 +64,30 @@ const OverViewTable = () => {
     };
   });
 
+  // Is Filter
   const shouldLoadMoreData = () => {
     if (Object.values(filter).every((value) => value === "") ) {
       return true;
     }
     return false;
   };
-
+  
+  // Lazy Loading
   const handleReachEnd = useCallback(() => {
 
     if (shouldLoadMoreData() && lazyDataSource.length < dataFromJSON.length ) {
         
         setLoading(true);       
-        
-        // const newStart = currentStart+pageSize; 
-        // console.log("currentStart:", currentStart, "newStart:", newStart)
-        // setCurrentStart(newStart);      
-
-        // const newEnd = Math.min(newStart + pageSize, dataFromJSON.length);     
-        // const newData = dataFromJSON.slice(newStart, newEnd);
-        // console.log("newStart", newStart, "newEnd", newEnd)
-        // setLazyDataSource((prev) => [...prev, ...newData]);
-           setLazyDataSource((pre) => {
+        setLazyDataSource((pre) => {
             const temp = dataFromJSON.slice(pre.length, pre.length + pageSize);
             return [...pre, ...temp];
-          });
+        });
         
         setTimeout(() => {
             // scrollTo({ row: newStart})  
             setLoading(false);         
 
-        }, 1000);
+        }, 500);
 
        
     }
@@ -115,6 +109,7 @@ const OverViewTable = () => {
       }));
   };
 
+  // Filter Table Data
   useEffect(() => {
 
     if(!shouldLoadMoreData()){
@@ -132,15 +127,18 @@ const OverViewTable = () => {
   }, [filter]);
 
   return (
-    <Table
-      columns={renderedColumns}
-      dataSource={filterDataSource?filterDataSource:lazyDataSource}
-      rowKey="id"
-      pagination={false}
-      loading={loading}
-      scroll={{ y: "12rem" }}
-      components={vc}
-    />
+    <div className="virtual-table-container">
+        <p className="virtual-table-header">Tool Invetory</p>
+        <Table
+            columns={renderedColumns}
+            dataSource={filterDataSource?filterDataSource:lazyDataSource}
+            rowKey="id"
+            pagination={false}
+            loading={loading}
+            scroll={{ y: "12rem" }}
+            components={vc}
+        />
+    </div>
   );
 };
 

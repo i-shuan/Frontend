@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { Avatar, Button, List, Skeleton, Divider } from 'antd';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import './MismatchList.css';
 
 const MismatchList = () => {
 

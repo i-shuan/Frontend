@@ -3,7 +3,7 @@
 import React from 'react';
 import ReactEcharts from 'echarts-for-react';
 import { Card, Input } from 'antd';
-import './ChartCard.css';
+// import './ChartCard.css';
 
 const options = {
   tooltip: {
