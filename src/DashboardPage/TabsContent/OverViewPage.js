@@ -3,6 +3,7 @@ import { Card, Input, List} from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import './OverViewPage.css';
 import ChartCard from './ChartCard';
+import MismatchList from "./MismatchList";
 
 const SummaryCard = ({ title, description, backgroundColor }) => {
     console.log("description", description)
@@ -41,6 +42,7 @@ const SummaryCard = ({ title, description, backgroundColor }) => {
             </div>
           </Card>
           <ChartCard />
+          <MismatchList/>
         </div>
       </div>
     );

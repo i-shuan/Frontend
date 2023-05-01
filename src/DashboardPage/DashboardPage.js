@@ -18,13 +18,14 @@ const DashboardPage = () => {
       <div className="search-container">
         <Input className="search-input" placeholder="Search Tool Type..." prefix={<SearchOutlined className='search-icon' />} />
       </div>
-      <Tabs>
+      {/* <Tabs>
         {tabItems.map(item => (
           <TabPane key={item.key} tab={item.title}>
             {item.content}
           </TabPane>
         ))}
-      </Tabs>
+      </Tabs> */}
+      <OverViewPage/>
     </Card>
   );
 }
