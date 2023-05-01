@@ -1,127 +1,140 @@
 import React, { useState, useMemo, useCallback, useEffect } from "react";
 import { Table, Input } from "antd";
-import { VList } from "virtuallist-antd";
-const pageSize = 10;
+import { VList, scrollTo} from "virtuallist-antd";
+const pageSize = 50;
 
-   
+
+const columns = [
+    {
+      title: "Name",
+      dataIndex: "name",
+      width: 200,
+    },
+    {
+      title: "Action",
+      dataIndex: "action",
+      width: 200,
+    },
+    {
+      title: "Email",
+      dataIndex: "email",
+      width: 300,
+    }
+];
 
 const generateData = (count) => {
-    const data = [];
-    data.push({ id: 0, name: 'initial', action:'initial', email:'initial'});
-    for (let i = 1; i <= count; i++) {
-      data.push({ id: i, name: `Name ${i}`});
-    }
-    return data;
-  };
-  
-const dataFromJSON = generateData(20);
+  const data = [];
+  data.push({ id: 0, name: "initial", action: "initial", email: "initial" });
+  for (let i = 1; i <= count; i++) {
+    data.push({ id: i, name: `Name ${i}` });
+  }
+  return data;
+};
 
-const renderData = (start, end, filter="") => {
-    const data = [];
-    let filteredData = dataFromJSON.filter((record) =>
-        record?.key===0||record?.name?.toLowerCase().includes(filter?.toLowerCase())
-    );
-    console.log("filteredData", filteredData)
-    for (let i = start; i <= end && i + end <= filteredData.length; i++) {
-       
-      const record = filteredData[i - 1];
-      data.push({
-        key: i,
-        id: record.id,
-        name: record.name,
-        action: record.action,
-        email: record.email,
-      });
-    }
-    return data;
-  };
-
+const dataFromJSON = generateData(150);
 
 
 const OverViewTable = () => {
 
-    const [dataSource, setDataSource] = useState(renderData(1, pageSize));
-    const [loading, setLoading] = useState(false);
-    const [filter, setFilter] = useState("");
-    
-    const columns = [
-      {
-        title: "ID",
-        dataIndex: "id",
-        width: 100
-      },
-      {
-        title: "Name",
-        dataIndex: "name",
-        width: 200,
-        render: (text, record) => {
-          return record.name === "initial" ? (
-            <Input
-              placeholder="Filter Name"
-              value={filter}
-              onChange={(e) => handleFilterChange(e.target.value)}
-            />
-          ) : (
-            text
-          );
-        }
-      },
-      {
-        title: "Action",
-        dataIndex: "action",
-        width: 200
-      },
-      {
-        title: "Email",
-        dataIndex: "email",
-        width: 300
-      }
-    ];
-    
-    const handleReachEnd = useCallback(() => {
-      
-      if(filter===""){
-        setLoading(true);
-        console.log("Reached end");
-        const newStart = dataSource.length + 1;
-        const newEnd = newStart + pageSize - 1;
-        const newData = renderData(newStart, newEnd, filter);
-        setDataSource(prev => [...prev, ...newData]);
-        setTimeout(() => {
-            setLoading(false);
-        }, 1000);
-      }
-    }, [dataSource]);
+  const [dataSource, setDataSource] = useState(dataFromJSON.slice(0, pageSize));
+  const [loading, setLoading] = useState(false);
+  const [filter, setFilter] = useState("");
+  const [currentStart, setCurrentStart] = useState(0);
+  console.log("currentStart", currentStart)
+  const renderedColumns = columns.map((column) => {
+    const { title, dataIndex, width} = column;
   
-    const vc = useMemo(() => {
-      return VList({
-        height: "15rem",
-        onReachEnd: handleReachEnd
-      });
-    }, [handleReachEnd]);
-  
-    const handleFilterChange = (value) => {
-        setFilter(value);
+    return {
+      title,
+      dataIndex,
+      width,
+      render: (text, record) => {
+        return record[dataIndex] === "initial" ? (
+          <Input
+            placeholder={`Filter ${title}`}
+            value={filter[dataIndex]}
+            onChange={(e) => handleFilterChange(dataIndex, e.target.value)}
+          />
+        ) : (
+          text
+        );
+      }
     };
+  });
 
-    useEffect(()=>{
-
-        if(filter){
-            setDataSource(renderData(0, dataFromJSON, filter));
-        }    
-    },[filter])
-  
-    return (
-      <Table
-        columns={columns}
-        dataSource={dataSource}
-        rowKey="id"
-        pagination={false}
-        loading={loading}
-        scroll={{ y: "12rem" }}
-        components={vc}
-      />
-    );
+  const shouldLoadMoreData = () => {
+    if (Object.values(filter).every((value) => value === "") ) {
+      return true;
+    }
+    return false;
   };
+
+  const handleReachEnd = useCallback(() => {
+
+    if (shouldLoadMoreData() && dataSource.length < dataFromJSON.length ) {
+        
+        setLoading(true);       
+        
+        const newStart = currentStart+pageSize; 
+        console.log("currentStart:", currentStart, "newStart:", newStart)
+        setCurrentStart(newStart);      
+
+        const newEnd = Math.min(newStart + pageSize, dataFromJSON.length);     
+        const newData = dataFromJSON.slice(newStart, newEnd);
+        console.log("newStart", newStart, "newEnd", newEnd)
+        setDataSource((prev) => [...prev, ...newData]);
+       
+        
+        setTimeout(() => {
+
+            scrollTo({ row: newStart})  
+            setLoading(false);         
+
+        }, 1000);
+
+       
+    }
+  }, [currentStart, filter]);
+
+  const vc = useMemo(() => {
+    return VList({
+      height: "15rem",
+      onReachEnd: handleReachEnd,
+      resetTopWhenDataChange: false // 在更新時保留目前捲軸位置
+    });
+  }, [handleReachEnd]);
+
+  const handleFilterChange = (key, value) => {
+
+      setFilter((prev) => ({
+        ...prev,
+        [key]: value,
+      }));
+  };
+
+  useEffect(() => {
+
+    if(!shouldLoadMoreData()){
+        const filteredData = dataFromJSON.filter((record) =>
+            record?.id === 0 || record?.name?.toLowerCase().includes(filter?.name?.toLowerCase())
+        );
+        setCurrentStart(0);
+        setDataSource(filteredData);
+    }
+
+  }, [filter]);
+
+  return (
+    <Table
+      columns={renderedColumns}
+      dataSource={dataSource}
+      rowKey="id"
+      pagination={false}
+      loading={loading}
+      scroll={{ y: "12rem" }}
+      components={vc}
+    />
+  );
+};
 
 export default OverViewTable;
