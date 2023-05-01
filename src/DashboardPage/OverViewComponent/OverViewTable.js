@@ -36,7 +36,8 @@ const dataFromJSON = generateData(150);
 
 const OverViewTable = () => {
 
-  const [dataSource, setDataSource] = useState(dataFromJSON.slice(0, pageSize));
+  const [lazyDataSource, setLazyDataSource] = useState(dataFromJSON.slice(0, pageSize));
+  const [filterDataSource, setFilterDataSource] = useState(null);
   const [loading, setLoading] = useState(false);
   const [filter, setFilter] = useState("");
   const [currentStart, setCurrentStart] = useState(0);
@@ -71,30 +72,32 @@ const OverViewTable = () => {
 
   const handleReachEnd = useCallback(() => {
 
-    if (shouldLoadMoreData() && dataSource.length < dataFromJSON.length ) {
+    if (shouldLoadMoreData() && lazyDataSource.length < dataFromJSON.length ) {
         
         setLoading(true);       
         
-        const newStart = currentStart+pageSize; 
-        console.log("currentStart:", currentStart, "newStart:", newStart)
-        setCurrentStart(newStart);      
+        // const newStart = currentStart+pageSize; 
+        // console.log("currentStart:", currentStart, "newStart:", newStart)
+        // setCurrentStart(newStart);      
 
-        const newEnd = Math.min(newStart + pageSize, dataFromJSON.length);     
-        const newData = dataFromJSON.slice(newStart, newEnd);
-        console.log("newStart", newStart, "newEnd", newEnd)
-        setDataSource((prev) => [...prev, ...newData]);
-       
+        // const newEnd = Math.min(newStart + pageSize, dataFromJSON.length);     
+        // const newData = dataFromJSON.slice(newStart, newEnd);
+        // console.log("newStart", newStart, "newEnd", newEnd)
+        // setLazyDataSource((prev) => [...prev, ...newData]);
+           setLazyDataSource((pre) => {
+            const temp = dataFromJSON.slice(pre.length, pre.length + pageSize);
+            return [...pre, ...temp];
+          });
         
         setTimeout(() => {
-
-            scrollTo({ row: newStart})  
+            // scrollTo({ row: newStart})  
             setLoading(false);         
 
         }, 1000);
 
        
     }
-  }, [currentStart, filter]);
+  }, []);
 
   const vc = useMemo(() => {
     return VList({
@@ -119,7 +122,11 @@ const OverViewTable = () => {
             record?.id === 0 || record?.name?.toLowerCase().includes(filter?.name?.toLowerCase())
         );
         setCurrentStart(0);
-        setDataSource(filteredData);
+        setFilterDataSource(filteredData);
+    }
+    else{
+        setFilterDataSource(null);
+        setLazyDataSource(lazyDataSource);
     }
 
   }, [filter]);
@@ -127,7 +134,7 @@ const OverViewTable = () => {
   return (
     <Table
       columns={renderedColumns}
-      dataSource={dataSource}
+      dataSource={filterDataSource?filterDataSource:lazyDataSource}
       rowKey="id"
       pagination={false}
       loading={loading}
