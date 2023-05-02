@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useCallback, useEffect } from "react";
-import { Table, Input } from "antd";
+import { Table, Input , FloatButton, } from "antd";
 import { VList, scrollTo} from "virtuallist-antd";
-
+import { BackTopOutlined } from '@ant-design/icons';
 const pageSize = 50;
 const columns = [
     {
@@ -84,7 +84,7 @@ const OverViewTable = () => {
         });
         
         setTimeout(() => {
-            // scrollTo({ row: newStart})  
+           
             setLoading(false);         
 
         }, 500);
@@ -95,7 +95,7 @@ const OverViewTable = () => {
 
   const vc = useMemo(() => {
     return VList({
-      height: "15rem",
+      height: "25rem",
       onReachEnd: handleReachEnd,
       resetTopWhenDataChange: false // 在更新時保留目前捲軸位置
     });
@@ -127,6 +127,7 @@ const OverViewTable = () => {
   }, [filter]);
 
   return (
+    <>
     <div className="virtual-table-container">
         <p className="virtual-table-header">Tool Invetory</p>
         <Table
@@ -135,10 +136,11 @@ const OverViewTable = () => {
             rowKey="id"
             pagination={false}
             loading={loading}
-            scroll={{ y: "12rem" }}
+            scroll={{ y: "20rem" }}
             components={vc}
         />
     </div>
+    </>
   );
 };
 

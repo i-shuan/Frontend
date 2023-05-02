@@ -1,17 +1,20 @@
 import logo from './logo.svg';
 import './App.css';
 import { HashRouter, Route, Switch, Routes } from 'react-router-dom';
-import { MenuOutlined, PieChartOutlined, FolderViewOutlined, MessageOutlined, HomeOutlined} from '@ant-design/icons';
+import { SettingOutlined, PieChartOutlined, FolderViewOutlined, MessageOutlined, HomeOutlined} from '@ant-design/icons';
 import Layouts from "./Layouts/Layouts"
 import HomePage from "./HomePage/HomePage"
 import DashboardPage from './DashboardPage/DashboardPage';
+import ConfigManagerPage from './ConfigManager/ConfigManagerPage';
+
 function App() {
 
   const menuItems = [
     { key: '0', group: 'MAIN', icon: <HomeOutlined />, title: 'HOME', path:"/" },
     { key: '1', group: 'MAIN', icon: <PieChartOutlined />, title: 'DASHBOARD', path:"/Dashboard" },
     { key: '2', group: 'MAIN', icon: <FolderViewOutlined />, title: 'TOOL VIEWER' },
-    { key: '3', group: 'OTHERS', icon: <MessageOutlined />, title: 'CONTACT US' },
+    { key: '3', group: 'MAIN', icon: <SettingOutlined />, title: 'Config Manager', path:"/ConfigManager" },
+    { key: '4', group: 'OTHERS', icon: <MessageOutlined />, title: 'CONTACT US' },
   ];
 
   
@@ -22,6 +25,7 @@ function App() {
         <Routes>
           <Route path="/" element={<HomePage/>} />
           <Route path="/Dashboard" element={<DashboardPage />} />
+          <Route path="/ConfigManager" element={<ConfigManagerPage/>} />
         </Routes>     
       </Layouts>
       </HashRouter>

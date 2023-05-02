@@ -1,0 +1,64 @@
+{
+    "data":[
+      {
+        "xpath": "",
+        "name": "file_1.txt",
+        "attribute": "size",
+        "value": 823
+      },
+      {
+        "xpath": "/Config/TAP/TAPs/A1/Bundle",
+        "name": "file_2.txt",
+        "attribute": "size",
+        "value": 96
+      },
+      {
+        "xpath": "/Config/TAP/TAPs/A1/Bundle",
+        "name": "file_3.txt",
+        "attribute": "size",
+        "value": 719
+      },
+      {
+        "xpath": "/Config/TAP/TAPs/A1/Bundle",
+        "name": "file_4.txt",
+        "attribute": "size",
+        "value": 241
+      },
+      {
+        "xpath": "/Config/TAP/TAPs/A1/Bundle",
+        "name": "file_5.txt",
+        "attribute": "size",
+        "value": 571
+      },
+      {
+        "xpath": "/Config/TAP/TAPs/eNum",
+        "name": "file_6.txt",
+        "attribute": "size",
+        "value": 748
+      },
+      {
+        "xpath": "/Config/TAP/TAPs/A1",
+        "name": "file_7.txt",
+        "attribute": "size",
+        "value": 65
+      },
+      {
+        "xpath": "/Config/TAP/UserParameters/Routers/Router1",
+        "name": "file_8.txt",
+        "attribute": "size",
+        "value": 914
+      },
+      {
+        "xpath": "/Config/TAP/UserParameters/Routers/Router2",
+        "name": "file_9.txt",
+        "attribute": "size",
+        "value": 473
+      },
+      {
+        "xpath": "/Config/TAP/TAPs/B1/Dependencies",
+        "name": "file_10.txt",
+        "attribute": "size",
+        "value": 37
+      }
+    ]
+}
