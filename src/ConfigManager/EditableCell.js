@@ -11,7 +11,7 @@ const EditableCell = ({
   handleSave,
   ...restProps
 }) => {
-  console.log("record", record)
+  // console.log("record", record)
   const [editing, setEditing] = useState(false);
   const inputRef = useRef(null);
   const [form] = Form.useForm();
@@ -64,7 +64,7 @@ const EditableCell = ({
         </Form>
       );
     } else {
-      console.log("childNode", childNode)
+      // console.log("childNode", childNode)
       childNode = (
         <div
           className="editable-cell-value-wrap"

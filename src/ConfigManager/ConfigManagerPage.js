@@ -87,6 +87,8 @@ const hasMatchingDescendant = (node, filterInput) => {
 };
 
 const filterTreeData = (data, filterInput) => {
+  console.log("filterInput", filterInput, "data", data);
+
   return data.reduce((filteredNodes, node) => {
     let filteredChildren = [];
 
@@ -95,13 +97,21 @@ const filterTreeData = (data, filterInput) => {
       filteredChildren = filterTreeData(node.children, filterInput);
     }
 
-    // 對節點的 title 進行篩選
+    // 判斷節點是否符合篩選條件
+    const titleMatches = filterInput?.title?.toLowerCase()
+      ? node?.title?.toLowerCase().includes(filterInput?.title?.toLowerCase())
+      : true;
+    const attributeMatches = filterInput?.attribute?.toLowerCase()
+      ? node?.attribute?.toLowerCase().includes(filterInput?.attribute?.toLowerCase())
+      : true;
+    const valueMatches = filterInput?.value
+      ? node?.value?.toString().includes(filterInput?.value?.toString())
+      : true;
+
     if (
-      node.key === 0 ||
-      node.title.toLowerCase().includes(filterInput.title.toLowerCase()) ||
-      hasMatchingDescendant(node, filterInput)
+      (node.key===0||titleMatches && attributeMatches && valueMatches) ||
+      filteredChildren.length > 0
     ) {
-      // 保留篩選後的子節點，或在過濾條件清除時顯示所有子節點
       filteredNodes.push({
         ...node,
         children: filteredChildren.length > 0 ? filteredChildren : node.children,
@@ -129,7 +139,8 @@ const ConfigManager = () => {
     if (filterInput.title !== "" || filterInput.attribute !== "" || filterInput.value !== "") {
       const filteredData = filterTreeData(treeData, filterInput);
       setFilteredTreeData(filteredData);
-    } else {
+    } 
+    else {
       setFilteredTreeData(treeData);
     }
   }, [filterInput, treeData]); // Add treeData as a dependency
