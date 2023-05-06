@@ -10,12 +10,7 @@ import {
   Form,
   Input,
 } from "antd";
-import {
-  CopyOutlined,
-  DeleteOutlined,
-  PlusOutlined,
-  ExclamationCircleOutlined,
-} from "@ant-design/icons";
+
 import { v4 as uuidv4 } from "uuid";
 import EditableCell from "./EditableCell";
 import FilterInput from "../Components/FilterInput";
@@ -72,7 +67,9 @@ const convertToTreeData = (obj, parentKey = null) => {
 };
 
 const orignalTreeData = convertToTreeData(result);
-orignalTreeData.push({key:0, "title":"initial", "attribute": "initial", "value": "initial"})
+const initialData = {key:0, "title":"initial", "attribute": "initial", "value": "initial"};
+orignalTreeData.push(initialData);
+
 /*key=0 排第一列*/
 const treeDataWithTop = [orignalTreeData.find(item => item.key === 0), ...orignalTreeData.filter(item => item.key !== 0)]
 console.log("treeDataWithTop", treeDataWithTop)
@@ -117,11 +114,6 @@ const filterTreeData = (data, filterInput) => {
 
 
 
-
-const hiddenRowStyle = {
-  display: "none",
-};
-
 const ConfigManager = () => {
   const [checkStrictly, setCheckStrictly] = useState(false);
  /* tree structure key*/
@@ -135,14 +127,22 @@ const ConfigManager = () => {
   console.log("filterInput", filterInput)
   
   useEffect(() => {
-    const filteredData = filterTreeData(treeDataWithTop, filterInput);
-    setFilteredTreeData(filteredData);
+    // const filteredData = filterTreeData(treeDataWithTop, filterInput);
+    // setFilteredTreeData(filteredData);
 
   }, [filterInput]);
 
   const handleFilterInputChange = useCallback((field, value) => {
-    setFilterInput(prevState => ({ ...prevState, [field]: value }));
+    setFilterInput((prevState) => ({ ...prevState, [field]: value }));
+  
+    // 在使用者按下 Enter 鍵時更新過濾後的樹數據
+    const filteredData = filterTreeData(treeDataWithTop, {
+      ...filterInput,
+      [field]: value,
+    });
+    setFilteredTreeData(filteredData);
   }, []);
+  
   
 
   const columns = [
@@ -365,14 +365,15 @@ const insertNode = (data, nodeToInsert, selectedNodeKey) => {
     });
   };
 
-/* Edit Cell Value - association to save function*/
-  const handleSave = (updatedRecord, obj) => {
+  /* Edit Cell Value - association to save function*/
+  const handleSave = useCallback((updatedRecord, obj) => {
+  
     const { key } = updatedRecord;
     const dataIndex = Object.keys(obj)[0];
     const newData = obj[dataIndex] !== undefined ? obj[dataIndex] : '';
     const updatedTreeData = updateTreeData(treeData, key, dataIndex, newData);
     setTreeData(updatedTreeData);
-  };
+  },[]);
 
 
   /* Call EditCell*/

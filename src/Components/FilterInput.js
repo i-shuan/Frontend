@@ -1,30 +1,24 @@
-import { useState, useEffect, useRef } from 'react';
-import { Input } from 'antd';
+// FilterInput.js
+import React, { useState } from "react";
+import { Input } from "antd";
+import { SearchOutlined } from "@ant-design/icons";
 
-function FilterInput(props) {
-  const [inputValue, setInputValue] = useState(props.value);
-  const timerIdRef = useRef(null);
+const FilterInput = ({ field, value, onChange }) => {
+  const [inputValue, setInputValue] = useState(value);
 
-  useEffect(() => {
-    setInputValue(props.value);
-  }, [props.value]);
-
-  const handleInputChange = (event) => {
-    setInputValue(event.target.value);
-    if (timerIdRef.current) {
-      clearTimeout(timerIdRef.current);
-    }
-
-    timerIdRef.current = setTimeout(() => {
-      props.onChange(props.field, event.target.value);
-    }, 1500);
+  const handleSearch = () => {
+    onChange(field, inputValue);
   };
 
   return (
-    <div>
-      <Input key={props.field} value={inputValue} onChange={handleInputChange} />
-    </div>
+    <Input
+      placeholder={`Filter by ${field}`}
+      prefix={<SearchOutlined />}
+      value={inputValue}
+      onChange={(e) => setInputValue(e.target.value)}
+      onPressEnter={handleSearch}
+    />
   );
-}
+};
 
 export default FilterInput;

@@ -6,6 +6,7 @@ const EditableCell = ({
   editable,
   children,
   dataIndex,
+  rowIndex,
   record,
   handleSave,
   ...restProps
@@ -32,12 +33,19 @@ const EditableCell = ({
   const save = async () => {
     try {
       const values = await form.validateFields();
-      toggleEdit();
-      handleSave(record, values);
+      // 添加一个短暂的延迟，以确保在失去焦点时有足够的时间进行保存。
+      setTimeout(() => {
+        toggleEdit();
+       
+        handleSave(record, values);
+        
+      }, 100);
     } catch (errInfo) {
       console.log("Save failed:", errInfo);
     }
   };
+  
+
 
   let childNode = children;
   if (editable) {
@@ -68,7 +76,7 @@ const EditableCell = ({
           }}
           onClick={toggleEdit}
         >
-          {record[dataIndex] !== undefined ? children : "(Empty)"}
+          {children || "(Empty)"}
         </div>
       );
     }
