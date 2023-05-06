@@ -79,7 +79,7 @@ const hasMatchingDescendant = (node, filterInput) => {
   if (node.children) {
     return node.children.some(
       (child) =>
-        child.title.toLowerCase().includes(filterInput.title.toLowerCase()) ||
+      child.key === 0 ||child.title.toLowerCase().includes(filterInput.title.toLowerCase()) ||
         hasMatchingDescendant(child, filterInput)
     );
   }
@@ -127,20 +127,17 @@ const ConfigManager = () => {
   console.log("filterInput", filterInput)
   
   useEffect(() => {
-    // const filteredData = filterTreeData(treeDataWithTop, filterInput);
-    // setFilteredTreeData(filteredData);
-
-  }, [filterInput]);
+    if (filterInput.title !== "" || filterInput.attribute !== "" || filterInput.value !== "") {
+      const filteredData = filterTreeData(treeData, filterInput);
+      setFilteredTreeData(filteredData);
+    } else {
+      setFilteredTreeData(treeData);
+    }
+  }, [filterInput, treeData]); // Add treeData as a dependency
+  
 
   const handleFilterInputChange = useCallback((field, value) => {
     setFilterInput((prevState) => ({ ...prevState, [field]: value }));
-  
-    // 在使用者按下 Enter 鍵時更新過濾後的樹數據
-    const filteredData = filterTreeData(treeDataWithTop, {
-      ...filterInput,
-      [field]: value,
-    });
-    setFilteredTreeData(filteredData);
   }, []);
   
   
@@ -367,11 +364,13 @@ const insertNode = (data, nodeToInsert, selectedNodeKey) => {
 
   /* Edit Cell Value - association to save function*/
   const handleSave = useCallback((updatedRecord, obj) => {
-  
+    
+    
     const { key } = updatedRecord;
     const dataIndex = Object.keys(obj)[0];
     const newData = obj[dataIndex] !== undefined ? obj[dataIndex] : '';
     const updatedTreeData = updateTreeData(treeData, key, dataIndex, newData);
+    console.log("updatedTreeData", updatedTreeData)
     setTreeData(updatedTreeData);
   },[]);
 
@@ -380,7 +379,6 @@ const insertNode = (data, nodeToInsert, selectedNodeKey) => {
   const components = {
     body: {
       cell: (props) => {
-        {console.log("props", props);}
         return props.editable ? (
            <EditableCell {...props} form={form} handleSave={handleSave} />
         ) : (

@@ -11,7 +11,7 @@ const EditableCell = ({
   handleSave,
   ...restProps
 }) => {
-  console.log("record", record)
+
   const [editing, setEditing] = useState(false);
   const inputRef = useRef(null);
   const [form] = Form.useForm();
@@ -33,13 +33,13 @@ const EditableCell = ({
   const save = async () => {
     try {
       const values = await form.validateFields();
-      // 添加一个短暂的延迟，以确保在失去焦点时有足够的时间进行保存。
-      setTimeout(() => {
-        toggleEdit();
+      
+      console.log("values", values)
+     
+      toggleEdit();
        
-        handleSave(record, values);
-        
-      }, 100);
+      handleSave(record, values);
+   
     } catch (errInfo) {
       console.log("Save failed:", errInfo);
     }
