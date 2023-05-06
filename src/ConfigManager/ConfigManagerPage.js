@@ -1,4 +1,4 @@
-import React, { useState, createContext } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 
 import {
   Space,
@@ -18,11 +18,12 @@ import {
 } from "@ant-design/icons";
 import { v4 as uuidv4 } from "uuid";
 import EditableCell from "./EditableCell";
+import FilterInput from "../Components/FilterInput";
 
-export const EditableContext = createContext(null);
 const configData = require("./DataStructure.json");
 
-//reduce處理多個不同的array
+/* Convert String to Json =>若backend給Json這個能省略 */
+
 const result = configData.data.reduce((acc, obj) => {
   //split xpath to Array
   const levels = obj.xpath.split("/").filter((level) => level !== "");
@@ -47,6 +48,7 @@ const result = configData.data.reduce((acc, obj) => {
 
 console.log("result", result)
 
+/* Convert Json to TreeData */
 const convertToTreeData = (obj, parentKey = null) => {
   return Object.entries(obj).map(([key, objValue], index) => {
     const isLeaf =
@@ -69,29 +71,80 @@ const convertToTreeData = (obj, parentKey = null) => {
   });
 };
 
-
-
-
 const orignalTreeData = convertToTreeData(result);
 orignalTreeData.push({key:0, "title":"initial", "attribute": "initial", "value": "initial"})
+/*key=0 排第一列*/
 const treeDataWithTop = [orignalTreeData.find(item => item.key === 0), ...orignalTreeData.filter(item => item.key !== 0)]
 console.log("treeDataWithTop", treeDataWithTop)
 
+/* Filter */
+const hasMatchingDescendant = (node, filterInput) => {
+  if (node.children) {
+    return node.children.some(
+      (child) =>
+        child.title.toLowerCase().includes(filterInput.title.toLowerCase()) ||
+        hasMatchingDescendant(child, filterInput)
+    );
+  }
+  return false;
+};
+
+const filterTreeData = (data, filterInput) => {
+  return data.reduce((filteredNodes, node) => {
+    let filteredChildren = [];
+
+    // 如果節點有子節點，遞迴過濾子節點
+    if (node.children) {
+      filteredChildren = filterTreeData(node.children, filterInput);
+    }
+
+    // 對節點的 title 進行篩選
+    if (
+      node.key === 0 ||
+      node.title.toLowerCase().includes(filterInput.title.toLowerCase()) ||
+      hasMatchingDescendant(node, filterInput)
+    ) {
+      // 保留篩選後的子節點，或在過濾條件清除時顯示所有子節點
+      filteredNodes.push({
+        ...node,
+        children: filteredChildren.length > 0 ? filteredChildren : node.children,
+      });
+    }
+
+    return filteredNodes;
+  }, []);
+};
+
+
+
+
+const hiddenRowStyle = {
+  display: "none",
+};
 
 const ConfigManager = () => {
   const [checkStrictly, setCheckStrictly] = useState(false);
  /* tree structure key*/
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [treeData, setTreeData] = useState(treeDataWithTop);
-  console.log("selectedRowKeys", selectedRowKeys)
+  const [filteredTreeData, setFilteredTreeData] = useState(treeDataWithTop);
   const [copiedNode, setCopiedNode] = useState(null);
   const [filterInput, setFilterInput] = useState({title:"", attribute:"", value:""});
   const [form] = Form.useForm();
   
+  console.log("filterInput", filterInput)
   
-  const handleFilterOnChange = (e) => {
-    console.log("e", e.target.value)
-  }
+  useEffect(() => {
+    const filteredData = filterTreeData(treeDataWithTop, filterInput);
+    setFilteredTreeData(filteredData);
+
+  }, [filterInput]);
+
+  const handleFilterInputChange = useCallback((field, value) => {
+    setFilterInput(prevState => ({ ...prevState, [field]: value }));
+  }, []);
+  
+
   const columns = [
     {
       title: "XPath",
@@ -99,9 +152,13 @@ const ConfigManager = () => {
       key: "title",
       render: (text, record) => (
         record.title === "initial" ?
-          <Input key="title" onChange={handleFilterOnChange}/>
-          :
-          text
+        <FilterInput
+          field="title"
+          value={filterInput.title}
+          onChange={handleFilterInputChange}
+        />
+        :
+        text
       )      
     },
     {
@@ -112,13 +169,16 @@ const ConfigManager = () => {
         record,
         dataIndex: "attribute",
         editable: record.attribute !== "initial",
-        handleSave,
+        handleSave: (key, dataIndex, value) => handleSave(key, "attribute", value),
       }),
       render: (text, record) => (
         record.attribute === "initial" ?
-          <Input key="attribute" onChange={handleFilterOnChange}/>
-          :
-          text
+        <FilterInput
+          field="attribute"
+          value={filterInput.attribute}
+          onChange={handleFilterInputChange}
+        />:
+        text
       )
     },
     {
@@ -129,18 +189,38 @@ const ConfigManager = () => {
         record,
         dataIndex: "value",
         editable: record.value !== "initial",
-        handleSave,
+        handleSave: (key, dataIndex, value) => handleSave(key, "value", value),
       }),
       render: (text, record) => (
         record.value === "initial" ?
-          <Input key="value" onChange={handleFilterOnChange}/>
-          :
-          text
+        <FilterInput
+          field="value"
+          value={filterInput.value}
+          onChange={handleFilterInputChange}
+        />:
+        text
       )
     },
   ];
   
-  
+  const mergedColumns = columns.map((col) => {
+    if (!col.editable) {
+      return col;
+    }
+
+    return {
+      ...col,
+      onCell: (record) => ({
+        record,
+        dataIndex: col.dataIndex,
+        title: col.title,
+        editable: col.editable,
+        handleSave: handleSave,
+      }),
+    };
+  });
+
+
  /*要尋找的節點的key和整個樹狀結構的資料*/
 const findNodeByKey = (key, data) => {
   for (let i = 0; i < data.length; i++) {
@@ -293,14 +373,22 @@ const insertNode = (data, nodeToInsert, selectedNodeKey) => {
     const updatedTreeData = updateTreeData(treeData, key, dataIndex, newData);
     setTreeData(updatedTreeData);
   };
+
+
   /* Call EditCell*/
   const components = {
     body: {
-      cell: (props) => (
-        <EditableCell {...props} form={form} handleSave={handleSave} />
-      ),
+      cell: (props) => {
+        {console.log("props", props);}
+        return props.editable ? (
+           <EditableCell {...props} form={form} handleSave={handleSave} />
+        ) : (
+          <td {...props} />
+        )
+      },
     },
   };
+  
 
  
 
@@ -320,11 +408,12 @@ const insertNode = (data, nodeToInsert, selectedNodeKey) => {
       <Form component={false}>
           <Table
             key="configManagerTable"
-            columns={columns}
-            dataSource={treeData}
+            columns={mergedColumns}
+            dataSource={filteredTreeData}
             pagination={false}
             rowKey={(record) => record.key}
             components={components}
+            rowClassName={(record) => (record.key === 0 ? "hidden-row" : "")}
             rowSelection={{
               type: "radio", 
               selectedRowKeys,
