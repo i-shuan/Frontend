@@ -14,115 +14,45 @@ import {
 import { v4 as uuidv4 } from "uuid";
 import EditableCell from "./EditableCell";
 import FilterInput from "../Components/FilterInput";
-
+import {ConvertDataStructure} from "./Function/ConvertDataStructure"
+import {ConvertToTreeData} from "./Function/ConvertToTreeData"
+import {FilterTreeData} from "./Function/FilterTreeData"
 const configData = require("./DataStructure.json");
 
+const columnDef = [
+  {name:"xpath", title:"XPath"},
+  {name:"attribute", title:"Attribute"},
+  {name:"value", title:"Value"},
+  {name:"updateTime", title:"UpdateTime"},
+]
 /* Convert String to Json =>若backend給Json這個能省略 */
 
-const result = configData.data.reduce((acc, obj) => {
-  //split xpath to Array
-  const levels = obj.xpath.split("/").filter((level) => level !== "");
+const convertToJson = ConvertDataStructure(configData, columnDef)
 
-  //這部分都是處理同一組/////////////////
-  let currLevel = acc;
-  levels.forEach((level) => {
-    if (!currLevel[level]) {
-      currLevel[level] = {};
-    }
-    currLevel = currLevel[level];
-  });
-
-  currLevel[obj.name] = {
-    xpath: obj.xpath,
-    attribute: obj.attribute,
-    value: obj.value,
-  };
-  ///////////////////////////////
-  return acc;
-}, {});
-
-console.log("result", result)
+console.log("convertToJson", convertToJson)
 
 /* Convert Json to TreeData */
-const convertToTreeData = (obj, parentKey = null) => {
-  return Object.entries(obj).map(([key, objValue], index) => {
-    const isLeaf =
-      typeof objValue !== "object" ||
-      (objValue.xpath && !objValue.children) ||
-      objValue.xpath === "";
-    const title = isLeaf ? objValue.name || key : objValue.xpath || key;
-    const item = {
-      key: parentKey ? `${parentKey}-${index + 1}` : `${index + 1}`,
-      title: title,
-      attribute: objValue.attribute ? objValue.attribute : "",
-      value: objValue.value ? objValue.value : "",
-    };
 
-    if (!isLeaf) {
-      item.children = convertToTreeData(objValue, item.key);
-    }
+const orignalTreeData = ConvertToTreeData(convertToJson, columnDef);
+console.log("orignalTreeData", orignalTreeData)
 
-    return item;
-  });
-};
+/*add FiltetInput in Table*/
+const initialData = columnDef.reduce((acc, column) => {
+  acc[column.name] = "initial";
+  return acc;
+}, {key: 0});
 
-const orignalTreeData = convertToTreeData(result);
-const initialData = {key:0, "title":"initial", "attribute": "initial", "value": "initial"};
 orignalTreeData.push(initialData);
 
 /*key=0 排第一列*/
 const treeDataWithTop = [orignalTreeData.find(item => item.key === 0), ...orignalTreeData.filter(item => item.key !== 0)]
 console.log("treeDataWithTop", treeDataWithTop)
 
-/* Filter */
-const hasMatchingDescendant = (node, filterInput) => {
-  if (node.children) {
-    return node.children.some(
-      (child) =>
-      child.key === 0 ||child.title.toLowerCase().includes(filterInput.title.toLowerCase()) ||
-        hasMatchingDescendant(child, filterInput)
-    );
-  }
-  return false;
-};
-
-const filterTreeData = (data, filterInput) => {
-  console.log("filterInput", filterInput, "data", data);
-
-  return data.reduce((filteredNodes, node) => {
-    let filteredChildren = [];
-
-    // 如果節點有子節點，遞迴過濾子節點
-    if (node.children) {
-      filteredChildren = filterTreeData(node.children, filterInput);
-    }
-
-    // 判斷節點是否符合篩選條件
-    const titleMatches = filterInput?.title?.toLowerCase()
-      ? node?.title?.toLowerCase().includes(filterInput?.title?.toLowerCase())
-      : true;
-    const attributeMatches = filterInput?.attribute?.toLowerCase()
-      ? node?.attribute?.toLowerCase().includes(filterInput?.attribute?.toLowerCase())
-      : true;
-    const valueMatches = filterInput?.value
-      ? node?.value?.toString().includes(filterInput?.value?.toString())
-      : true;
-
-    if (
-      (node.key===0||titleMatches && attributeMatches && valueMatches) ||
-      filteredChildren.length > 0
-    ) {
-      filteredNodes.push({
-        ...node,
-        children: filteredChildren.length > 0 ? filteredChildren : node.children,
-      });
-    }
-
-    return filteredNodes;
-  }, []);
-};
-
-
+/*add FiltetInput Value*/
+const initialFilterInput = columnDef.reduce((acc, column) => {
+  acc[column.name] = "";
+  return acc;
+}, {});
 
 const ConfigManager = () => {
   const [checkStrictly, setCheckStrictly] = useState(false);
@@ -131,16 +61,19 @@ const ConfigManager = () => {
   const [treeData, setTreeData] = useState(treeDataWithTop);
   const [filteredTreeData, setFilteredTreeData] = useState(treeDataWithTop);
   const [copiedNode, setCopiedNode] = useState(null);
-  const [filterInput, setFilterInput] = useState({title:"", attribute:"", value:""});
-  const [form] = Form.useForm();
+  const [filterInput, setFilterInput] = useState(initialFilterInput);
+ 
   console.log("filterInput", filterInput)
   
   useEffect(() => {
-    if (filterInput.title !== "" || filterInput.attribute !== "" || filterInput.value !== "") {
-      const filteredData = filterTreeData(treeData, filterInput);
+
+    /*我們使用 some 方法遍歷 columnDef 陣列，並檢查 filterInput 中對應的屬性值是否不為空字符串。如果 some 方法返回 true，則表示至少有一個篩選條件不為空，*/
+    const hasNonEmptyFilter = columnDef.some(column => filterInput[column.name] !== "");
+ 
+    if (hasNonEmptyFilter) {
+      const filteredData = FilterTreeData(treeData, filterInput);
       setFilteredTreeData(filteredData);
-    } 
-    else {
+    } else {
       setFilteredTreeData(treeData);
     }
   }, [filterInput, treeData]); // Add treeData as a dependency
@@ -155,81 +88,27 @@ const ConfigManager = () => {
     console.log('treeData has been updated:', treeData);
   }, [treeData]);
   
-  const columns = [
-    {
-      title: "XPath",
-      dataIndex: "title",
-      key: "title",
-      render: (text, record) => (
-        record.title === "initial" ?
-        <FilterInput
-          field="title"
-          value={filterInput.title}
-          onChange={handleFilterInputChange}
-        />
-        :
-        text
-      )      
-    },
-    {
-      title: "Attribute",
-      dataIndex: "attribute",
-      key: "attribute",
-      onCell: (record) => ({
-        record,
-        dataIndex: "attribute",
-        editable: record.attribute !== "initial",
-        handleSave: (key, dataIndex, value) => handleSave(key, "attribute", value),
-      }),
-      render: (text, record) => (
-        record.attribute === "initial" ?
-        <FilterInput
-          field="attribute"
-          value={filterInput.attribute}
-          onChange={handleFilterInputChange}
-        />:
-        text
-      )
-    },
-    {
-      title: "Value",
-      dataIndex: "value",
-      key: "value",
-      onCell: (record) => ({
-        record,
-        dataIndex: "value",
-        editable: record.value !== "initial",
-        handleSave: (key, dataIndex, value) => handleSave(key, "value", value),
-      }),
-      render: (text, record) => (
-        record.value === "initial" ?
-        <FilterInput
-          field="value"
-          value={filterInput.value}
-          onChange={handleFilterInputChange}
-        />:
-        text
-      )
-    },
-  ];
-  
-  const mergedColumns = columns.map((col) => {
-    if (!col.editable) {
-      return col;
-    }
-
+  const columns = columnDef.map((col) => {
     return {
-      ...col,
+      title: col.title,
+      dataIndex: col.name,
+      key: col.name,
       onCell: (record) => ({
         record,
-        dataIndex: col.dataIndex,
-        title: col.title,
-        editable: col.editable,
-        handleSave: handleSave,
+        dataIndex: col.name,
+        editable: record[col.name] !== "initial",
+        handleSave: (key, dataIndex, value) => handleSave(key, col.name, value),
       }),
-    };
+      render: (text, record) => (
+      record[col.name] === "initial" ?
+      <FilterInput
+          field={col.name}
+          value={filterInput[col.name]}
+          onChange={handleFilterInputChange}
+        />:
+      text)
+    }
   });
-
 
  /*要尋找的節點的key和整個樹狀結構的資料*/
 const findNodeByKey = (key, data) => {
@@ -263,12 +142,13 @@ const handleCopyNode = () => {
 
 /*確保所有子節點都完全複製*/
 const deepCopyNode = (node) => {
+
   const newNode = {
     key: uuidv4(),
-    title: node.title,
-    attribute: node.attribute,
-    value: node.value,
   };
+  columnDef.forEach(column => {
+    newNode[column.name] = node[column.name];
+  });
 
   /*假如copy node有children*/
   if (node.children) {
@@ -325,10 +205,17 @@ const handleAddNode = () => {
 
   const newNode = {
     key: uuidv4(),
-    title: "New Node",
-    attribute: "",
-    value: "",
   };
+
+  columnDef.forEach(column => {
+   
+    if(column.name==='updatetime'){
+      newNode[column.name] = "1911/01/01 00:00:00 AM";
+    }    
+    else{
+      newNode[column.name] = "New Node";
+    }
+  });
 
   const updatedTreeData = [...treeData];
   insertNode(updatedTreeData, newNode, selectedRowKeys[0]);
@@ -486,7 +373,7 @@ const insertNode = (data, nodeToInsert, selectedNodeKey) => {
       <Form component={false}>
           <Table
             key="configManagerTable"
-            columns={mergedColumns}
+            columns={columns}
             dataSource={filteredTreeData}
             pagination={false}
             rowKey={(record) => record.key}
