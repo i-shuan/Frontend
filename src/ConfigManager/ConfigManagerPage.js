@@ -346,6 +346,58 @@ const insertNode = (data, nodeToInsert, selectedNodeKey) => {
   }
 };
 
+  /* Delete node*/
+  
+  const handleDeleteNode = () => {
+    if (selectedRowKeys.length === 0) {
+      Modal.warning({
+        title: "Please select a node to delete.",
+      });
+      return;
+    }
+  
+    // Find the parent of the node to delete
+    const parentNode = findParentNodeByKey(treeData, selectedRowKeys[0]);
+  
+    if (parentNode === null) {
+      Modal.warning({
+        title: "Cannot delete the root node.",
+      });
+      return;
+    }
+  
+    // Remove the node from its parent's children
+    parentNode.children = parentNode.children.filter(
+      (child) => child.key !== selectedRowKeys[0]
+    );
+  
+    // Update the tree data
+    setTreeData([...treeData]);
+  
+    // Clear the selected row keys
+    setSelectedRowKeys([]);
+  };
+  
+  const findParentNodeByKey = (data, key) => {
+    for (let i = 0; i < data.length; i++) {
+      const node = data[i];
+  
+      if (node.children) {
+        if (node.children.some((child) => child.key === key)) {
+          return node;
+        }
+  
+        const foundParentNode = findParentNodeByKey(node.children, key);
+        if (foundParentNode) {
+          return foundParentNode;
+        }
+      }
+    }
+  
+    return null;
+  };
+
+  
   /* Edit Cell Value - update new value to Tree*/
   const updateTreeData = (data, key, dataIndex, newData) => {
     return data.map((item) => {
@@ -402,6 +454,7 @@ const insertNode = (data, nodeToInsert, selectedNodeKey) => {
         <Button onClick={handleCopyNode}>Copy</Button>
         <Button onClick={handlePasteNode}>Paste</Button>
         <Button onClick={handleAddNode}>Add</Button>
+        <Button onClick={handleDeleteNode}>Delete</Button> {/* Add this line */}
         <Switch checked={checkStrictly} onChange={setCheckStrictly} />
       </Space>
       <Form component={false}>
