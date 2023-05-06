@@ -123,7 +123,6 @@ const ConfigManager = () => {
   const [copiedNode, setCopiedNode] = useState(null);
   const [filterInput, setFilterInput] = useState({title:"", attribute:"", value:""});
   const [form] = Form.useForm();
-  
   console.log("filterInput", filterInput)
   
   useEffect(() => {
@@ -141,7 +140,10 @@ const ConfigManager = () => {
   }, []);
   
   
-
+  useEffect(() => {
+    console.log('treeData has been updated:', treeData);
+  }, [treeData]);
+  
   const columns = [
     {
       title: "XPath",
@@ -398,15 +400,16 @@ const insertNode = (data, nodeToInsert, selectedNodeKey) => {
   };
 
   
-  /* Edit Cell Value - update new value to Tree*/
-  const updateTreeData = (data, key, dataIndex, newData) => {
+  /* Edit Cell Value - update new value to Tree */
+  const updateTreeData = (data, key, newRecord) => {
+    console.log("updateTreeData", data, key, newRecord)
     return data.map((item) => {
       if (item.key === key) {
-        return { ...item, [dataIndex]: newData };
+        return newRecord;
       } else if (item.children) {
         return {
           ...item,
-          children: updateTreeData(item.children, key, dataIndex, newData),
+          children: updateTreeData(item.children, key, newRecord),
         };
       } else {
         return item;
@@ -414,31 +417,43 @@ const insertNode = (data, nodeToInsert, selectedNodeKey) => {
     });
   };
 
+
+
   /* Edit Cell Value - association to save function*/
   const handleSave = useCallback((updatedRecord, obj) => {
-    
-    
+    console.log("updatedRecord", updatedRecord)
     const { key } = updatedRecord;
-    const dataIndex = Object.keys(obj)[0];
-    const newData = obj[dataIndex] !== undefined ? obj[dataIndex] : '';
-    const updatedTreeData = updateTreeData(treeData, key, dataIndex, newData);
-    console.log("updatedTreeData", updatedTreeData)
+    const newRecord = { ...updatedRecord, ...obj };
+  
+    const updatedTreeData = updateTreeData(treeData, key, newRecord);
+    console.log("updatedTreeData", updatedTreeData);
     setTreeData(updatedTreeData);
-  },[]);
+  }, [treeData]); // 將 treeData 加入 useCallback 的依賴列表
+  
+
 
 
   /* Call EditCell*/
   const components = {
     body: {
-      cell: (props) => {
-        return props.editable ? (
-           <EditableCell {...props} form={form} handleSave={handleSave} />
+      cell: (cellProps) => {
+        const { editable, rowIndex, dataIndex , record} = cellProps;
+        return editable ? (
+          <EditableCell
+            {...cellProps}
+            key={`${rowIndex}-${dataIndex}-${record[dataIndex]}`}
+            handleSave={handleSave}
+            rowIndex={rowIndex}
+            dataIndex={dataIndex}
+          />
         ) : (
-          <td {...props} />
-        )
+          <td {...cellProps} />
+        );
       },
     },
   };
+  
+  
   
 
  

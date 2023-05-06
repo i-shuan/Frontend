@@ -11,7 +11,7 @@ const EditableCell = ({
   handleSave,
   ...restProps
 }) => {
-
+  console.log("record", record)
   const [editing, setEditing] = useState(false);
   const inputRef = useRef(null);
   const [form] = Form.useForm();
