@@ -48,21 +48,21 @@ const result = configData.data.reduce((acc, obj) => {
 console.log("result", result)
 
 const convertToTreeData = (obj, parentKey = null) => {
-  return Object.entries(obj).map(([key, value], index) => {
+  return Object.entries(obj).map(([key, objValue], index) => {
     const isLeaf =
-      typeof value !== "object" ||
-      (value.xpath && !value.children) ||
-      value.xpath === "";
-    const title = isLeaf ? value.name || key : value.xpath || key;
+      typeof objValue !== "object" ||
+      (objValue.xpath && !objValue.children) ||
+      objValue.xpath === "";
+    const title = isLeaf ? objValue.name || key : objValue.xpath || key;
     const item = {
       key: parentKey ? `${parentKey}-${index + 1}` : `${index + 1}`,
       title: title,
-      attribute: value.attribute ? value.attribute : "",
-      value: value.value ? value.value : "",
+      attribute: objValue.attribute ? objValue.attribute : "",
+      value: objValue.value ? objValue.value : "",
     };
 
     if (!isLeaf) {
-      item.children = convertToTreeData(value, item.key);
+      item.children = convertToTreeData(objValue, item.key);
     }
 
     return item;
@@ -72,39 +72,37 @@ const convertToTreeData = (obj, parentKey = null) => {
 
 
 
-const treeData = convertToTreeData(result);
-
-console.log("treeData", treeData)
-
-const updateTreeData = (data, key, dataIndex, newData) => {
-  return data.map((item) => {
-    if (item.key === key) {
-      return { ...item, [dataIndex]: newData };
-    } else if (item.children) {
-      return {
-        ...item,
-        children: updateTreeData(item.children, key, dataIndex, newData),
-      };
-    } else {
-      return item;
-    }
-  });
-};
+const orignalTreeData = convertToTreeData(result);
+orignalTreeData.push({key:0, "title":"initial", "attribute": "initial", "value": "initial"})
+const treeDataWithTop = [orignalTreeData.find(item => item.key === 0), ...orignalTreeData.filter(item => item.key !== 0)]
+console.log("treeDataWithTop", treeDataWithTop)
 
 
 const ConfigManager = () => {
   const [checkStrictly, setCheckStrictly] = useState(false);
  /* tree structure key*/
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
-  const [treeData, setTreeData] = useState(convertToTreeData(result));
+  const [treeData, setTreeData] = useState(treeDataWithTop);
   console.log("selectedRowKeys", selectedRowKeys)
   const [copiedNode, setCopiedNode] = useState(null);
+  const [filterInput, setFilterInput] = useState({title:"", attribute:"", value:""});
   const [form] = Form.useForm();
+  
+  
+  const handleFilterOnChange = (e) => {
+    console.log("e", e.target.value)
+  }
   const columns = [
     {
       title: "XPath",
       dataIndex: "title",
       key: "title",
+      render: (text, record) => (
+        record.title === "initial" ?
+          <Input key="title" onChange={handleFilterOnChange}/>
+          :
+          text
+      )      
     },
     {
       title: "Attribute",
@@ -112,10 +110,16 @@ const ConfigManager = () => {
       key: "attribute",
       onCell: (record) => ({
         record,
-        dataIndex: 'attribute',
-        editable: true,
+        dataIndex: "attribute",
+        editable: record.attribute !== "initial",
         handleSave,
       }),
+      render: (text, record) => (
+        record.attribute === "initial" ?
+          <Input key="attribute" onChange={handleFilterOnChange}/>
+          :
+          text
+      )
     },
     {
       title: "Value",
@@ -123,13 +127,19 @@ const ConfigManager = () => {
       key: "value",
       onCell: (record) => ({
         record,
-        dataIndex: 'value',
-        editable: true,
+        dataIndex: "value",
+        editable: record.value !== "initial",
         handleSave,
       }),
+      render: (text, record) => (
+        record.value === "initial" ?
+          <Input key="value" onChange={handleFilterOnChange}/>
+          :
+          text
+      )
     },
   ];
-
+  
   
  /*要尋找的節點的key和整個樹狀結構的資料*/
 const findNodeByKey = (key, data) => {
@@ -245,6 +255,7 @@ const insertNode = (data, nodeToInsert, selectedNodeKey) => {
 
       /*假如選取的node為leaf */
       if (!node.children) {
+        /* leaf 的 node 要變成父node*/
         node.attribute="Node";
         node.children = [];
       }
@@ -258,27 +269,31 @@ const insertNode = (data, nodeToInsert, selectedNodeKey) => {
   }
 };
 
-  /* Edit Table Cell */
-  const handleSave = (updatedRecord) => {
-    // 找到要更新的節點
-    const updatedTreeData = treeData.map((item) => {
-      if (item.key === updatedRecord.key) {
-        return { ...item, ...updatedRecord };
+  /* Edit Cell Value - update new value to Tree*/
+  const updateTreeData = (data, key, dataIndex, newData) => {
+    return data.map((item) => {
+      if (item.key === key) {
+        return { ...item, [dataIndex]: newData };
       } else if (item.children) {
         return {
           ...item,
-          children: updateTreeData(item.children, updatedRecord),
+          children: updateTreeData(item.children, key, dataIndex, newData),
         };
       } else {
         return item;
       }
     });
+  };
+
+/* Edit Cell Value - association to save function*/
+  const handleSave = (updatedRecord, obj) => {
+    const { key } = updatedRecord;
+    const dataIndex = Object.keys(obj)[0];
+    const newData = obj[dataIndex] !== undefined ? obj[dataIndex] : '';
+    const updatedTreeData = updateTreeData(treeData, key, dataIndex, newData);
     setTreeData(updatedTreeData);
   };
-  
-  
-  
-
+  /* Call EditCell*/
   const components = {
     body: {
       cell: (props) => (
@@ -286,6 +301,8 @@ const insertNode = (data, nodeToInsert, selectedNodeKey) => {
       ),
     },
   };
+
+ 
 
   return (
     <>
@@ -301,24 +318,25 @@ const insertNode = (data, nodeToInsert, selectedNodeKey) => {
         <Switch checked={checkStrictly} onChange={setCheckStrictly} />
       </Space>
       <Form component={false}>
-        <EditableContext.Provider value={form}>
           <Table
             key="configManagerTable"
             columns={columns}
             dataSource={treeData}
             pagination={false}
             rowKey={(record) => record.key}
-             components={components}
+            components={components}
             rowSelection={{
               type: "radio", 
               selectedRowKeys,
               onChange: (selectedRowKeys) => {
                 setSelectedRowKeys(selectedRowKeys);
               },
-              hideSelectAll:true
+              hideSelectAll:true,
+              getCheckboxProps: (record) => ({
+                disabled: record.key === 0,
+              }),
             }}
           />
-        </EditableContext.Provider>
       </Form>
     </>
   );

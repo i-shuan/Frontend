@@ -1,6 +1,7 @@
 import React from 'react';
 import { Card } from 'antd';
 import './SecsSignalsTable.css';
+import DownloadFile from "../Components/DownloadFile";
 
 const signalsMappingStruc = {
   "-1": "🔴",
@@ -18,10 +19,15 @@ const getSignalValueData = {
 
 const signals = Object.entries(getSignalValueData).map(([key, value]) => `${key}: <span style="font-size: 24px;">${signalsMappingStruc[value]}</span> `).join('');
 
-const SecsSignalsCard = () => (
+const SecsSignalsCard = () => {
+
+
+  return(
+ 
   <Card style={{ width: 'fit-content' }}>
+    
     <div dangerouslySetInnerHTML={{ __html: signals }} />
-  </Card>
-);
+  </Card>);
+};
 
 export default SecsSignalsCard;

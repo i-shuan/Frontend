@@ -1,8 +1,6 @@
 import React, { useState, useRef, useContext, useEffect } from "react";
-import { Form, Input } from "antd";
-import { EditableContext } from "./ConfigManagerPage";
-import { VList } from "virtuallist-antd";
-const VComponents = VList({ height: 500, resetTopWhenDataChange: false });
+import { Form, Input, useForm } from "antd";
+
 const EditableCell = ({
   title,
   editable,
@@ -12,9 +10,11 @@ const EditableCell = ({
   handleSave,
   ...restProps
 }) => {
+  console.log("record", record)
   const [editing, setEditing] = useState(false);
   const inputRef = useRef(null);
-  const form = useContext(EditableContext);
+  const [form] = Form.useForm();
+
   useEffect(() => {
     if (editing) {
       inputRef.current.focus();
@@ -22,9 +22,10 @@ const EditableCell = ({
   }, [editing]);
 
   const toggleEdit = () => {
+    console.log("dataIndex", dataIndex)
     setEditing(!editing);
     form.setFieldsValue({
-      [dataIndex]: record[dataIndex]
+      [dataIndex]: record[dataIndex],
     });
   };
 
@@ -32,46 +33,49 @@ const EditableCell = ({
     try {
       const values = await form.validateFields();
       toggleEdit();
-      handleSave({ ...record, ...values });
+      handleSave(record, values);
     } catch (errInfo) {
       console.log("Save failed:", errInfo);
     }
   };
 
   let childNode = children;
-
-  const CellComponent = VComponents.body.cell;
-
   if (editable) {
-    childNode = editing ? (
-      <Form.Item
-        style={{
-          margin: 0
-        }}
-        name={dataIndex}
-        rules={[
-          {
-            required: true,
-            message: `${title} is required.`
-          }
-        ]}
-      >
-        <Input ref={inputRef} onPressEnter={save} onBlur={save} />
-      </Form.Item>
-    ) : (
-      <div
-        className="editable-cell-value-wrap"
-        style={{
-          paddingRight: 24
-        }}
-        onClick={toggleEdit}
-      >
-        {children}
-      </div>
-    );
+    if (editing) {
+      console.log("dataIndex", dataIndex)
+      childNode = (
+        <Form form={form}>
+          <Form.Item
+            style={{
+              margin: 0
+            }}
+            name={dataIndex}
+          >
+            <Input ref={inputRef} onPressEnter={save} onBlur={save} />
+          </Form.Item>
+        </Form>
+      );
+    } else {
+      console.log("childNode", childNode)
+      childNode = (
+        <div
+          className="editable-cell-value-wrap"
+          style={{
+            paddingRight: 24,
+            minHeight: 20,
+            minWidth: 20,
+            display: 'inline-block'
+          }}
+          onClick={toggleEdit}
+        >
+          {record[dataIndex] !== undefined ? children : "(Empty)"}
+        </div>
+      );
+    }
   }
 
-  return <CellComponent {...restProps}>{childNode}</CellComponent>;
+  return <td {...restProps}>{childNode}</td>;
 };
 
 export default EditableCell;
+

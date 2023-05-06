@@ -15,7 +15,7 @@ function App() {
     { key: '1', group: 'MAIN', icon: <PieChartOutlined />, title: 'DASHBOARD', path:"/Dashboard" },
     { key: '2', group: 'MAIN', icon: <FolderViewOutlined />, title: 'TOOL VIEWER' },
     { key: '3', group: 'MAIN', icon: <SettingOutlined />, title: 'Config Manager', path:"/ConfigManager" },
-    { key: '4', group: 'MAIN', icon: <BulbOutlined /> , title: 'Secs Signal', path:"/SecsSignalsTable" },
+    { key: '4', group: 'MAIN', icon: <BulbOutlined /> , title: 'SECS SIGNAL', path:"/SecsSignalsTable" },
     { key: '5', group: 'OTHERS', icon: <MessageOutlined />, title: 'CONTACT US' },
   ];
 
