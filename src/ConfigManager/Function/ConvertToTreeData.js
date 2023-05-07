@@ -16,6 +16,10 @@ export const ConvertToTreeData = (obj, columnDef, parentKey = null) => {
         if(column.name==="xpath"){
             item[column.name]=title
         }
+        else if(column.name==="originalValue"){
+            /* add orignal Data for user Edit*/
+            item[column.name]= objValue["value"]
+        }
         else{
             item[column.name] = objValue[column.name]??"";
         }

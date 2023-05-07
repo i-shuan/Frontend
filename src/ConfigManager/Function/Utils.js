@@ -29,11 +29,22 @@ const handleCopyNode = (selectedRowKeys, treeData, setCopiedNode) => {
 };
 
 const deepCopyNode = (node, columnDef) => {
+
+  //every node need primary key
   const newNode = {
     key: uuidv4(),
   };
+  //set NewNode every Column Value 
   columnDef.forEach((column) => {
-    newNode[column.name] = node[column.name];
+  
+    if(column.name==='updateTime'){ //columnDef config
+      const currentTime = new Date().toISOString(); // Get the current time
+      newNode[column.name] = currentTime;
+    }    
+    else{
+      newNode[column.name] = node[column.name];
+    }
+
   });
 
   if (node.children) {
@@ -87,14 +98,16 @@ const handleAddNode = (selectedRowKeys, treeData, setTreeData, columnDef) => {
     return;
   }
 
+  //every node need primary key
   const newNode = {
     key: uuidv4(),
   };
-
+  //set NewNode every Column Value 
   columnDef.forEach(column => {
    
-    if(column.name==='updatetime'){
-      newNode[column.name] = "1911/01/01 00:00:00 AM";
+    if(column.name==='updateTime'){ //columnDef config
+      const currentTime = new Date().toISOString(); // Get the current time
+      newNode[column.name] = currentTime;
     }    
     else{
       newNode[column.name] = "New Node";

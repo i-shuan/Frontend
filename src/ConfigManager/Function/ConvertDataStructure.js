@@ -12,7 +12,8 @@ export const ConvertDataStructure = (configData, columnDef) => {
       }
       currLevel = currLevel[level];
     });
-  
+    
+    /* obj.name 為 fileName 根據Data Structure改變 obj.XXXXX*/
     currLevel[obj.name] = {
       ...obj
     };

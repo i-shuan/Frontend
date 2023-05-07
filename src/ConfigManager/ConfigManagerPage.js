@@ -21,10 +21,11 @@ import {handleCopyNode, handlePasteNode, handleAddNode,  handleDeleteNode} from 
 const configData = require("./DataStructure.json");
 
 const columnDef = [
-  {name:"xpath", title:"XPath"},
-  {name:"attribute", title:"Attribute"},
-  {name:"value", title:"Value"},
-  {name:"updateTime", title:"UpdateTime"},
+  {name:"xpath", title:"XPath", editable:true},
+  {name:"attribute", title:"Attribute", editable:true},
+  {name:"value", title:"Value", editable:true},
+  {name:"originalValue", title:"OriginalValue", editable:false},
+  {name:"updateTime", title:"UpdateTime", editable:false},
 ]
 /* Convert String to Json =>若backend給Json這個能省略 */
 
@@ -97,19 +98,21 @@ const ConfigManager = () => {
       onCell: (record) => ({
         record,
         dataIndex: col.name,
-        editable: record[col.name] !== "initial",
+        editable: record[col.name] !== "initial" && col.editable, // Use col.name instead of "orignalValue"
         handleSave: (key, dataIndex, value) => handleSave(key, col.name, value),
       }),
       render: (text, record) => (
-      record[col.name] === "initial" ?
-      <FilterInput
-          field={col.name}
-          value={filterInput[col.name]}
-          onChange={handleFilterInputChange}
-        />:
-      text)
+        
+        record[col.name] === "initial" ?
+        <FilterInput
+            field={col.name}
+            value={filterInput[col.name]}
+            onChange={handleFilterInputChange}
+          />:
+        text)
     }
   });
+  
 
   const handleCopy = () => {
     handleCopyNode(selectedRowKeys, treeData, setCopiedNode);
