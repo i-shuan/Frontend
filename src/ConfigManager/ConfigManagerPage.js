@@ -17,6 +17,7 @@ import FilterInput from "../Components/FilterInput";
 import {ConvertDataStructure} from "./Function/ConvertDataStructure"
 import {ConvertToTreeData} from "./Function/ConvertToTreeData"
 import {FilterTreeData} from "./Function/FilterTreeData"
+import {handleCopyNode, handlePasteNode, handleAddNode,  handleDeleteNode} from "./Function/Utils"
 const configData = require("./DataStructure.json");
 
 const columnDef = [
@@ -110,194 +111,24 @@ const ConfigManager = () => {
     }
   });
 
- /*要尋找的節點的key和整個樹狀結構的資料*/
-const findNodeByKey = (key, data) => {
-  for (let i = 0; i < data.length; i++) {
-    
-    if (data[i].key === key) {
-      return data[i];
-    }
-    if (data[i].children) {
-      const foundNode = findNodeByKey(key, data[i].children);
-      if (foundNode) {
-        return foundNode;
-      }
-    }
-  }
-  return null;
-};
-
-const handleCopyNode = () => {
-  if (selectedRowKeys.length === 0) {
-    Modal.warning({
-      title: "Please select a node to copy.",
-    });
-    return;
-  }
-
-  const selectedNode = findNodeByKey(selectedRowKeys[0], treeData);
-  setCopiedNode(selectedNode);
-};
-
-
-/*確保所有子節點都完全複製*/
-const deepCopyNode = (node) => {
-
-  const newNode = {
-    key: uuidv4(),
-  };
-  columnDef.forEach(column => {
-    newNode[column.name] = node[column.name];
-  });
-
-  /*假如copy node有children*/
-  if (node.children) {
-
-    /*遞迴*/
-    newNode.children = node.children.map((child) => deepCopyNode(child));
-  }
-
-  return newNode;
-};
-
-const handlePasteNode = () => {
-  if (!copiedNode) {
-    Modal.warning({
-      title: "Please copy a node first.",
-    });
-    return;
-  }
-  if (selectedRowKeys.length === 0) {
-    Modal.warning({
-      title: "Please select a node to paste.",
-    });
-    return;
-  }
-
-  const selectedNode = findNodeByKey(selectedRowKeys[0], treeData);
-  const newNode = deepCopyNode(copiedNode);
-
-  /*檢查目標節點是否具有子節點*/
-  /*確保了目標節點具有 children 屬性*/
-  if (!selectedNode.children) {
-    //假如原本attribute是attr 則改為node, node也是改node(沒差)
-    selectedNode.attribute="Node";
-    selectedNode.children = [];
-  }
-  selectedNode.children.push(newNode);
-
-  /*如果不這樣做，由於 treeData 的引用未改變，
-  React 將無法檢測到 treeData 的變更，可能導致渲染不一致。*/
-  setTreeData([...treeData]);
-
-  //Reset Copy node
-  setCopiedNode(null);
-};
-
-
-const handleAddNode = () => {
-  if (selectedRowKeys.length === 0) {
-    Modal.warning({
-      title: "Please select a parent node to add a new node.",
-    });
-    return;
-  }
-
-  const newNode = {
-    key: uuidv4(),
+  const handleCopy = () => {
+    handleCopyNode(selectedRowKeys, treeData, setCopiedNode);
   };
 
-  columnDef.forEach(column => {
-   
-    if(column.name==='updatetime'){
-      newNode[column.name] = "1911/01/01 00:00:00 AM";
-    }    
-    else{
-      newNode[column.name] = "New Node";
-    }
-  });
+  const handlePaste = () => {
+    handlePasteNode(selectedRowKeys, treeData, setTreeData, copiedNode, setCopiedNode, columnDef);
+  };
 
-  const updatedTreeData = [...treeData];
-  insertNode(updatedTreeData, newNode, selectedRowKeys[0]);
-  setTreeData(updatedTreeData);
-};
-
-/*遞迴整個tree*/
-const insertNode = (data, nodeToInsert, selectedNodeKey) => {
-  for (let i = 0; i < data.length; i++) {
-    const node = data[i];
-    
-    /*假如尋找整個tree的key找到選取的node*/
-    if (node.key === selectedNodeKey) {
-
-      /*假如選取的node為leaf */
-      if (!node.children) {
-        /* leaf 的 node 要變成父node*/
-        node.attribute="Node";
-        node.children = [];
-      }
-      node.children.push(nodeToInsert);
-      break;
-    } else if (node.children) {
-      /*假如沒有找到而且node還有小孩*/
-      insertNode(node.children, nodeToInsert, selectedNodeKey);
-    }
-    /*node沒有小孩且又不是選取的node 不理會*/
-  }
-};
+  const handleAdd = () => {
+    handleAddNode(selectedRowKeys, treeData, setTreeData, columnDef);
+  };
 
   /* Delete node*/
-  
-  const handleDeleteNode = () => {
-    if (selectedRowKeys.length === 0) {
-      Modal.warning({
-        title: "Please select a node to delete.",
-      });
-      return;
-    }
-  
-    // Find the parent of the node to delete
-    const parentNode = findParentNodeByKey(treeData, selectedRowKeys[0]);
-  
-    if (parentNode === null) {
-      Modal.warning({
-        title: "Cannot delete the root node.",
-      });
-      return;
-    }
-  
-    // Remove the node from its parent's children
-    parentNode.children = parentNode.children.filter(
-      (child) => child.key !== selectedRowKeys[0]
-    );
-  
-    // Update the tree data
-    setTreeData([...treeData]);
-  
-    // Clear the selected row keys
-    setSelectedRowKeys([]);
-  };
-  
-  const findParentNodeByKey = (data, key) => {
-    for (let i = 0; i < data.length; i++) {
-      const node = data[i];
-  
-      if (node.children) {
-        if (node.children.some((child) => child.key === key)) {
-          return node;
-        }
-  
-        const foundParentNode = findParentNodeByKey(node.children, key);
-        if (foundParentNode) {
-          return foundParentNode;
-        }
-      }
-    }
-  
-    return null;
+  const handleDelete = () => {
+    handleDeleteNode(selectedRowKeys, treeData, setTreeData, setSelectedRowKeys);
   };
 
-  
+
   /* Edit Cell Value - update new value to Tree */
   const updateTreeData = (data, key, newRecord) => {
     console.log("updateTreeData", data, key, newRecord)
@@ -364,10 +195,10 @@ const insertNode = (data, nodeToInsert, selectedNodeKey) => {
           marginBottom: 16,
         }}
       >
-        <Button onClick={handleCopyNode}>Copy</Button>
-        <Button onClick={handlePasteNode}>Paste</Button>
-        <Button onClick={handleAddNode}>Add</Button>
-        <Button onClick={handleDeleteNode}>Delete</Button> {/* Add this line */}
+        <Button onClick={handleCopy}>Copy</Button>
+        <Button onClick={handlePaste}>Paste</Button>
+        <Button onClick={handleAdd}>Add</Button>
+        <Button onClick={handleDelete}>Delete</Button> {/* Add this line */}
         <Switch checked={checkStrictly} onChange={setCheckStrictly} />
       </Space>
       <Form component={false}>
