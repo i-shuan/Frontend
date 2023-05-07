@@ -152,16 +152,15 @@ const ConfigManager = () => {
   const handleSave = useCallback((updatedRecord, obj) => {
     console.log("updatedRecord", updatedRecord)
     const { key } = updatedRecord;
-    const newRecord = { ...updatedRecord, ...obj };
+    const currentTime = new Date().toISOString(); // Get the current time
+
+    const newRecord = { ...updatedRecord, ...obj,  updateTime: currentTime  };
   
     const updatedTreeData = updateTreeData(treeData, key, newRecord);
     console.log("updatedTreeData", updatedTreeData);
     setTreeData(updatedTreeData);
   }, [treeData]); // 將 treeData 加入 useCallback 的依賴列表
   
-
-
-
   /* Call EditCell*/
   const components = {
     body: {
