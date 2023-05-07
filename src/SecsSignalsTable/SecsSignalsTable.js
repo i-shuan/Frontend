@@ -2,6 +2,7 @@ import React from 'react';
 import { Card } from 'antd';
 import './SecsSignalsTable.css';
 import DownloadFile from "../Components/DownloadFile";
+import DateTimeRangeFilter from "./DateTimeRangeFilter";
 
 const signalsMappingStruc = {
   "-1": "🔴",
@@ -22,12 +23,14 @@ const signals = Object.entries(getSignalValueData).map(([key, value]) => `${key}
 const SecsSignalsCard = () => {
 
 
-  return(
- 
-  <Card style={{ width: 'fit-content' }}>
-    
-    <div dangerouslySetInnerHTML={{ __html: signals }} />
-  </Card>);
+    return(
+    <div>  
+      <Card style={{ width: 'fit-content' }}>
+        <div dangerouslySetInnerHTML={{ __html: signals }} />
+      </Card>
+      <DateTimeRangeFilter/>
+    </div>
+  )
 };
 
 export default SecsSignalsCard;
