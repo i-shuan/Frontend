@@ -3,7 +3,7 @@ import { Card } from 'antd';
 import './SecsSignalsTable.css';
 import DownloadFile from "../Components/DownloadFile";
 import DateTimeRangeFilter from "./DateTimeRangeFilter";
-
+import GroupComplete from "./GroupComplete"
 const signalsMappingStruc = {
   "-1": "🔴",
   "0": "🟡",
@@ -29,6 +29,7 @@ const SecsSignalsCard = () => {
         <div dangerouslySetInnerHTML={{ __html: signals }} />
       </Card>
       <DateTimeRangeFilter/>
+      <GroupComplete/>
     </div>
   )
 };
