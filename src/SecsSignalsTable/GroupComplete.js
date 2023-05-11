@@ -48,6 +48,7 @@ const GroupComplete = () => {
 
     return (
         <AutoComplete
+            key={`my-component-${new Date()}`}
             style={{ width: 200 }}
             options={options}
             onSearch={handleSearch}
