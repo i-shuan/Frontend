@@ -4,6 +4,8 @@ import './SecsSignalsTable.css';
 import DownloadFile from "../Components/DownloadFile";
 import DateTimeRangeFilter from "./DateTimeRangeFilter";
 import GroupComplete from "./GroupComplete"
+import LogContent from "./LogContent"
+
 const signalsMappingStruc = {
   "-1": "🔴",
   "0": "🟡",
@@ -30,6 +32,7 @@ const SecsSignalsCard = () => {
       </Card>
       <DateTimeRangeFilter/>
       <GroupComplete/>
+      <LogContent/>
     </div>
   )
 };
