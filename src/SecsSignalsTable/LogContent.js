@@ -15,35 +15,45 @@ const LogContent = () => {
 
   const maskS7FYContent = (log) => {
     const logLines = log.split('\n');
-    let mask = false;
-    let S7FY = null;
+    let isMasked = false;
+    let lastS7FY = null;
     let result = [];
-
+    let countMaskLine = 0;
+    var timeStampRegExp = /\d{4}-\d{2}-\d{2}\s\d{2}:\d{2}/;
     for (let i = 0; i < logLines.length; i++) {
-      if (logLines[i].includes('S7F')) {        
-        mask = true;
+      if (logLines[i].includes('S7F')) {               
+        isMasked = true;       
         const s7fMatch = logLines[i].match(/S7F\d{1,2}/);
+        
+        const time = logLines[i].match(timeStampRegExp);
 
-        /* Continuation of S7FY */
-        if (s7fMatch && s7fMatch[0] === S7FY) {
-
-          /*If it is to continue the same S7FY, the Mask string */
-          const time = logLines[i].match(/\d{4}-\d{2}-\d{2}\s\d{2}:\d{2}/);
-          result.push(`${time[0]} - ${S7FY} ***********`);
-        } else {
-
-          /*If it isn't to continue the same S7FY, push to Log */
-          S7FY = s7fMatch ? s7fMatch[0] : null;
-          result.push(logLines[i]);
+        if(s7fMatch !== lastS7FY){
+          /* Different S7FY => Reset Count */   
+          countMaskLine = 0;
+          lastS7FY = s7fMatch
         }
-      } else if (/\d{4}-\d{2}-\d{2}\s\d{2}:\d{2}/.test(logLines[i])) {
-        mask = false;
-        S7FY = null;
+        result.push(`${time[0]} - ${s7fMatch} ***********`);
+        continue;
+
+      } else if (timeStampRegExp.test(logLines[i])) {
+       
+        /* lastS7FY countent*/
+        if(isMasked && countMaskLine === 0){
+          const time = logLines[i].match(/\d{4}-\d{2}-\d{2}\s\d{2}:\d{2}/);
+          result.push(`${time[0]} - ***** Content ******`);
+        }
+        else{
+          isMasked = false;
+          lastS7FY = null
+          countMaskLine = 0;
+        }
+        countMaskLine = isMasked? countMaskLine+1:countMaskLine;
       }
-  
-      if (!mask) {   
+      
+      if(!isMasked){
         result.push(logLines[i]);
       }
+     
     }
   
     return result.join('\n');

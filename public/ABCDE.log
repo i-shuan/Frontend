@@ -77,11 +77,11 @@
                     <A[4] 0X00>
 
 2023-05-12 11:32 - SECS通訊日誌 - S7F25 (Server to 机台): [Header], Sequence: 7
-2023-05-12 11:33 - S7F25
-                    <A[4] 0X00>        
-2023-05-12 11:34 - SECS通訊日誌 - S7F26 (机台 to Server): [Header], Sequence: 8
-2023-05-12 11:35 - S7F26
-                      <L[20]
+2023-05-12 11:33 -  <A[4] 0X00>        
+2023-05-12 11:33 - SECS通訊日誌 - S6F11 (Server to 机台): [Header], Sequence: 8
+2023-05-12 11:34 -  <A[4] 0X00>   
+2023-05-12 11:34 - SECS通訊日誌 - S7F26 (机台 to Server): [Header], Sequence: 9
+2023-05-12 11:35 -  <L[20]
                         <A[10] "XYFSECVFDA">
                         <A[12] "ASWERGFHJVDF">
                         <A[12] "A123DWERTGHF">
@@ -131,5 +131,32 @@
 2023-05-12 15:31 - S2F14
                     <A[4] 0X00>
 
-
+2023-05-12 17:32 - SECS通訊日誌 - S7F13 (Server to 机台): [Header], Sequence: 7
+2023-05-12 17:33 -  S7F13
+                        <A[4] 0X00>        
+  
+2023-05-12 17:34 - SECS通訊日誌 - S7F14 (机台 to Server): [Header], Sequence: 9
+2023-05-12 17:35 - S7F14 
+                    <L[20]
+                        <A[10] "XYFSECVFDA">
+                        <A[12] "ASWERGFHJVDF">
+                        <A[12] "A123DWERTGHF">
+                        <A[5] "FGHTF">
+                        <A[7] "FRTYJNV">
+                        <A[6] "ABCD12">
+                        <A[11] "XYZ1234567">
+                        <A[13] "MNO78901234">
+                        <A[9] "PQRST5678">
+                        <A[8] "UVWX3456">
+                        <A[12] "YZZY12345678">
+                        <A[10] "LMNOPQRSTU">
+                        <A[7] "VWXYZ12">
+                        <A[14] "ABCDEFGHIJKLMN">
+                        <A[8] "OPQRSTUV">
+                        <A[12] "WXYZ12345678">
+                        <A[11] "ABCDEFGHIJK">
+                        <A[9] "LMNOPQRST">
+                        <A[10] "UVWXYZ1234">
+                        <A[11] "ABCDEFGHIJK">
+                      >
 
