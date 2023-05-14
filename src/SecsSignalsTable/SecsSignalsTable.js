@@ -1,7 +1,7 @@
 import React from 'react';
 import { Card } from 'antd';
 import './SecsSignalsTable.css';
-import DownloadFile from "../Components/DownloadFile";
+import {DownloadFile} from "./DownloadFile";
 import DateTimeRangeFilter from "./DateTimeRangeFilter";
 import GroupComplete from "./GroupComplete"
 import LogContent from "./LogContent"
@@ -32,7 +32,8 @@ const SecsSignalsCard = () => {
       </Card>
       <DateTimeRangeFilter/>
       <GroupComplete/>
-      <LogContent/>
+      {/* <LogContent/> */}
+      <DownloadFile/>
     </div>
   )
 };
