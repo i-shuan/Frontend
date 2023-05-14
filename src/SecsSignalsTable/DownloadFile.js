@@ -47,7 +47,7 @@ export const DownloadFile = () => {
 
     const downloadFile = async () => {
     const response = await axios({
-        url: "http://localhost:5000/data", // 替換為您的API網址
+        url: "http://localhost:5000/api/data", // 替換為您的API網址
         method: "POST",
         responseType: "json", // 改成期望得到json資料
     });
