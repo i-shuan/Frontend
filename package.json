@@ -3,10 +3,18 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@codemirror/basic-setup": "^0.20.0",
+    "@codemirror/lang-xml": "^6.0.2",
+    "@codemirror/state": "^6.3.2",
+    "@codemirror/view": "^6.22.1",
+    "@uiw/react-codemirror": "^4.21.21",
+    "ace-builds": "^1.32.0",
     "ag-grid-community": "^29.3.3",
     "ag-grid-react": "^29.3.3",
     "antd": "^5.4.6",
     "axios": "^1.4.0",
+    "buffer": "^6.0.3",
+    "codemirror": "^6.0.1",
     "cra-template": "1.2.0",
     "date-fns": "^2.30.0",
     "date-fns-tz": "^2.0.0",
@@ -18,14 +26,17 @@
     "react-dom": "^18.2.0",
     "react-infinite-scroll-component": "^6.1.0",
     "react-router-dom": "^6.10.0",
-    "react-scripts": "5.0.1",
+    "react-scripts": "^5.0.1",
     "react-spring": "^9.7.1",
-    "virtuallist-antd": "^0.7.6"
+    "stream-browserify": "^3.0.0",
+    "timers-browserify": "^2.0.12",
+    "virtuallist-antd": "^0.7.6",
+    "xml2js": "^0.6.2"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
+    "start": "react-app-rewired start",
+    "build": "react-app-rewired build",
+    "test": "react-app-rewired test",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
@@ -47,6 +58,7 @@
     ]
   },
   "devDependencies": {
+    "react-app-rewired": "^2.2.1",
     "web-vitals": "^3.3.1"
   }
 }
