@@ -5,7 +5,7 @@ const ConvertLog = (data, layer = 0) => {
 
     return data.reduce((acc, curr) => {
         const indentation = ' '.repeat(layer * space);  // 根據當前層級計算縮進
-        console.log("acc", acc);
+        
         switch (curr.type) {
 
            
