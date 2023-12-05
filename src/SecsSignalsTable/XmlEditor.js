@@ -192,11 +192,11 @@ const XmlEditor = () => {
             // EditorView.updateListener.of(update => {
             //   if (update.docChanged) {
             //     // 如果文檔發生了變化，我們將調用 debounced 函數
-               
+
             //       const newXml = update.state.doc.toString();
             //       console.log("newXml", newXml)
             //       debouncedSetXmlContents(newXml);
-                
+
             //   }
             // })
           ],
@@ -242,7 +242,7 @@ const XmlEditor = () => {
     const newSelectedXml = e.target.value;
     if (editorView) {
       // 保存当前编辑器内容
-      
+
       const currentContent = editorView.state.doc.toString();
       setXmlContents(prevContents => ({
         ...prevContents,
@@ -254,10 +254,10 @@ const XmlEditor = () => {
     }
   };
 
-  
+
   useEffect(() => {
     if (editorView) {
-     
+
       if (xmlContents && selectedXml in jsonExamples) {
         var newContent = xmlContents[selectedXml];
         if (!newContent) {
@@ -267,7 +267,7 @@ const XmlEditor = () => {
           changes: { from: 0, to: editorView.state.doc.length, insert: newContent }
         });
       }
-    
+
     }
   }, [selectedXml]);
 
@@ -286,44 +286,53 @@ const XmlEditor = () => {
 
   const parseXmlToJson = async (xmlString) => {
     return new Promise((resolve, reject) => {
+      console.log("xmlString", xmlString)
       parseString(xmlString, {
         explicitArray: false,
-        trim: true, // 这将去除文本节点中的空白字符
-        normalize: true, // 这将把多个空白字符转换成一个空格
+        explicitCharkey: "_",
+        // 是否保留空属性，默认为 false
+        emptyTag: '',
+        trim: false, // 禁用去除文本节点中的空白字符
+        normalize: false, // 禁用将多个空白字符转换成一个空格
       }, (err, result) => {
         if (err) {
           reject(err);
         } else {
-          removeEmptyValues(result); // 清理空白字符
+         
           resolve(result);
         }
       });
     });
   };
+  
 
   // 比對兩個 JSON 物件
   const compareJson = (originalJson, newJson) => {
     return diff(originalJson, newJson);
   };
 
+//  
   useEffect(() => {
     const compareXmlContents = async () => {
       for (const key in jsonExamples) {
         // 这里我们使用已保存的 XML 内容进行比较
-        const xmlToCompare = xmlContents[key] || '';
-        const jsonFromXml = await parseXmlToJson(xmlToCompare);
-        const differences = compareJson(jsonExamples[key], jsonFromXml);
-  
+        var differences = undefined;
+        if(xmlContents[key]){
+          const xmlToCompare = xmlContents[key];
+          const jsonFromXml = await parseXmlToJson(xmlToCompare);
+          console.log("jsonFromXml", jsonFromXml)
+          differences = compareJson(jsonExamples[key], jsonFromXml);
+        }  
         console.log(`Differences for ${key}:`, differences || 'No changes');
       }
     };
-  
+
     if (isSubmit) {
       compareXmlContents();
       setIsSubmit(false);
     }
   }, [xmlContents, isSubmit]);
-  
+
 
 
   const handleSubmit = async () => {
@@ -331,18 +340,7 @@ const XmlEditor = () => {
     const currentContent = editorView.state.doc.toString();
     setXmlContents(prev => ({ ...prev, [selectedXml]: currentContent }));
     setIsSubmit(true);
-    // // 等待状态更新
-    // await new Promise(resolve => setTimeout(resolve, 0));
 
-    // 对每个 xmlContents 中的 XML 进行比较
-    // for (const key in jsonExamples) {
-    //   // 这里我们使用已保存的 XML 内容进行比较
-    //   const xmlToCompare = xmlContents[key] || '';
-    //   const jsonFromXml = await parseXmlToJson(xmlToCompare);
-    //   const differences = compareJson(jsonExamples[key], jsonFromXml);
-
-    //   console.log(`Differences for ${key}:`, differences || 'No changes');
-    // }
   };
 
 
