@@ -5,6 +5,9 @@ import { xml } from '@codemirror/lang-xml';
 import { basicSetup } from 'codemirror';
 import { Builder, parseString } from 'xml2js';
 import { Card, Radio } from 'antd';
+import { UnControlled as CodeMirror } from 'react-codemirror2';
+import 'codemirror/lib/codemirror.css';
+import 'codemirror/mode/xml/xml';
 import diff from 'deep-diff';  // 引入 deep-diff
 // 在 XmlEditor.js 文件中
 import { Debounce } from './Function/Debounce';
