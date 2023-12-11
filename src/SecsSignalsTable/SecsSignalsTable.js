@@ -1,11 +1,12 @@
 import React from 'react';
 import { Card } from 'antd';
 import './SecsSignalsTable.css';
-import {DownloadFile} from "./DownloadFile";
+import { DownloadFile } from "./DownloadFile";
 import DateTimeRangeFilter from "./DateTimeRangeFilter";
 import GroupComplete from "./GroupComplete"
 import ConvertJsonToLog from "./ConvertJsonToLog"
 import XmlEditor from './XmlEditor';
+import CustomCascader from './CustomCascader';
 
 const signalsMappingStruc = {
   "-1": "🔴",
@@ -26,16 +27,17 @@ const signals = Object.entries(getSignalValueData).map(([key, value]) => `${key}
 const SecsSignalsCard = () => {
 
 
-    return(
-    <div>  
+  return (
+    <div>
       <Card style={{ width: 'fit-content' }}>
         <div dangerouslySetInnerHTML={{ __html: signals }} />
       </Card>
-      <DateTimeRangeFilter/>
-      <GroupComplete/>
+      <DateTimeRangeFilter />
+      <GroupComplete />
       {/* <DownloadFile/> */}
-      <ConvertJsonToLog/>
-      <XmlEditor/>
+      {/* <ConvertJsonToLog/> */}
+      {/* <XmlEditor/> */}
+      <CustomCascader />
     </div>
   )
 };
