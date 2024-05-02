@@ -1,0 +1,25 @@
+.demo-loadmore-list {
+    min-height: 350px;
+    border-radius: 8px;
+    border: 2px;
+    margin: 16px !important ;
+}
+
+.cardStyle {
+    border-radius: 8px; /* 設置圓角的大小 */
+    margin: 16px; /* 設置卡片的外邊距 */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15); /* 添加陰影效果 */
+    overflow: auto;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .listItemMeta {
+    display: flex;
+    align-items: center;
+  }
+  
+  .listItemMeta .ant-list-item-meta-content {
+    flex: 1; /* 確保內容可以擴展並填滿可用空間 */
+    text-align: left; /* 確保文本對齊到左側 */
+  }
