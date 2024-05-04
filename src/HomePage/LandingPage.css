@@ -6,6 +6,7 @@
 }
 
 .header-section {
+  margin-top: 0.01rem;
   background: url('http://user-images.strikinglycdn.com/res/hrscywv4p/image/upload/navqy40ywcdu0bt9z0di.jpg') center no-repeat;
   display: flex;
   flex-direction: column;
@@ -13,7 +14,6 @@
   justify-content: center;
   height: 40vh; /* 設定高度以適合你的設計需求 */
   background-size: cover;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
 
 
@@ -70,3 +70,4 @@
   right: 0; /* 右侧破折号位置 */
   transform: translateX(100%) translateY(-50%); /* 先向右移动自身长度，再垂直居中 */
 }
+

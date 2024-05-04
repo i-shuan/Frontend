@@ -1,13 +1,39 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './LandingPage.css';
 import AnimatedText from "../Components/AnimatedText";
 import TeamMemberCard from "./Utils/TeamMemberCard";
-import { Input, Space } from 'antd';
+import { Input, Space, Modal } from 'antd';
+import { useNavigate } from 'react-router-dom';
+import SearchResultsModal from './Utils/SearchResultsModal';
+
 const { Search } = Input;
 
-const onSearch = (value, _e, info) => console.log(info?.source, value);
+const LandingPage = (props) => {
 
-const LandingPage = () => {
+    const navigate = useNavigate();
+    const menuItems = props.menuItems;
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [searchResults, setSearchResults] = useState([]);
+
+    const onSearch = (value) => {
+        console.log("Search Input:", value);
+        const filteredResults = menuItems.filter(item =>
+            item?.content.toLowerCase().includes(value.toLowerCase())
+        );
+        console.log("filteredResults",filteredResults)
+        setSearchResults(filteredResults);
+        setIsModalOpen(true);
+    };
+
+
+    const handleOk = () => {
+        setIsModalOpen(false);
+    };
+
+    const handleCancel = () => {
+        setIsModalOpen(false);
+    };
+
     return (
         <div className="landing-page">
             <div className="header-section">
@@ -15,7 +41,7 @@ const LandingPage = () => {
                 <Search placeholder="Search..." onSearch={onSearch} className="search-input" />
             </div>
 
-            <h1 className="h1">  Team Member </h1>
+            <h1 className="h1">Team Member</h1>
 
             <div className="card-container">
                 <TeamMemberCard
@@ -33,8 +59,14 @@ const LandingPage = () => {
                     primaryResponsibilities="Two outsourced members handle miscellaneous operational tasks, ensuring efficiency in business processes."
                     additionalInfo="One focuses on backend development support, while the other assists with front-end development, ensuring technical projects proceed as planned."
                 />
-
             </div>
+
+            <SearchResultsModal
+                isModalOpen={isModalOpen}
+                handleOk={handleOk}
+                handleCancel={handleCancel}
+                searchResults={searchResults}
+            />
         </div>
     );
 };

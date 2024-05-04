@@ -8,13 +8,12 @@ import FileManagerPage from './FileManagerPage/FileManagerPage';
 function App() {
 
   const menuItems = [
-    { key: '0', group: 'MAIN', icon: <HomeOutlined />, title: 'HOME', path:"/" },
+    { key: '0', group: 'MAIN', icon: <HomeOutlined />, title: 'HOME', path:"/", content:"Home Page" },
     // { key: '1', group: 'MAIN', icon: <PieChartOutlined />, title: 'DASHBOARD', path:"/Dashboard" },
     // { key: '2', group: 'MAIN', icon: <FolderViewOutlined />, title: 'TOOL VIEWER' },
     // { key: '3', group: 'MAIN', icon: <SettingOutlined />, title: 'Config Manager', path:"/ConfigManager" },
     // { key: '4', group: 'MAIN', icon: <BulbOutlined /> , title: 'SECS SIGNAL', path:"/SecsSignalsTable" },
-    { key: '5', group: 'MAIN', icon: <BulbOutlined /> , title: 'FileManager', path:"/FileManagerPage" },
-    { key: '6', group: 'OTHERS', icon: <MessageOutlined />, title: 'CONTACT US' },
+    { key: '5', group: 'MAIN', icon: <BulbOutlined /> , title: 'FileManager', path:"/FileManagerPage",content:"Secs Command Editor" },
   ];
 
   
@@ -23,7 +22,7 @@ function App() {
       <HashRouter>
       <Layouts menuItems={menuItems}>     
         <Routes>
-          <Route path="/" element={<HomePage/>} />
+          <Route path="/" element={<HomePage menuItems={menuItems}/>} />
           {/* <Route path="/Dashboard" element={<DashboardPage />} />
           <Route path="/ConfigManager" element={<ConfigManagerPage/>} />
           <Route path="/SecsSignalsTable" element={<SecsSignalsTable/>} /> */}
