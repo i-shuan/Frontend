@@ -3,7 +3,7 @@ import './App.css';
 import { HashRouter, Route, Switch, Routes } from 'react-router-dom';
 import { SettingOutlined, PieChartOutlined, FolderViewOutlined, MessageOutlined, HomeOutlined, BulbOutlined} from '@ant-design/icons';
 import Layouts from "./Layouts/Layouts"
-import HomePage from "./HomePage/HomePage"
+import HomePage from "./HomePage/LandingPage"
 import FileManagerPage from './FileManagerPage/FileManagerPage';
 function App() {
 

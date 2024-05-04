@@ -21,7 +21,6 @@
     "file-saver": "^2.0.5",
     "fs": "^0.0.1-security",
     "react": "^18.2.0",
-    "react-codemirror": "^1.0.0",
     "react-dom": "^18.2.0",
     "react-infinite-scroll-component": "^6.1.0",
     "react-router-dom": "^6.10.0",
@@ -30,7 +29,6 @@
     "stream-browserify": "^3.0.0",
     "timers-browserify": "^2.0.12",
     "uuid": "^9.0.1",
-    "virtuallist-antd": "^0.7.6",
     "xml2js": "^0.6.2"
   },
   "scripts": {
