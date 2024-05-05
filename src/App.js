@@ -5,6 +5,8 @@ import { SettingOutlined, PieChartOutlined, FolderViewOutlined, MessageOutlined,
 import Layouts from "./Layouts/Layouts"
 import HomePage from "./HomePage/LandingPage"
 import FileManagerPage from './FileManagerPage/FileManagerPage';
+import WorldMap from './Components/WorldMap';
+
 function App() {
 
   const menuItems = [
@@ -14,6 +16,7 @@ function App() {
     // { key: '3', group: 'MAIN', icon: <SettingOutlined />, title: 'Config Manager', path:"/ConfigManager" },
     // { key: '4', group: 'MAIN', icon: <BulbOutlined /> , title: 'SECS SIGNAL', path:"/SecsSignalsTable" },
     { key: '5', group: 'MAIN', icon: <BulbOutlined /> , title: 'FileManager', path:"/FileManagerPage",content:"Secs Command Editor" },
+    { key: '6', group: 'MAIN', icon: <SettingOutlined /> , title: 'WorldMap', path:"/WorldMap",content:"3D World Map" },
   ];
 
   
@@ -27,6 +30,7 @@ function App() {
           <Route path="/ConfigManager" element={<ConfigManagerPage/>} />
           <Route path="/SecsSignalsTable" element={<SecsSignalsTable/>} /> */}
           <Route path="/FileManagerPage" element={<FileManagerPage/>} />
+          <Route path="/WorldMap" element={<WorldMap/>} />
         </Routes>     
       </Layouts>
       </HashRouter>

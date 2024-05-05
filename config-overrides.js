@@ -1,12 +1,27 @@
 module.exports = function override(config, env) {
-    // 确保 fallback 字段存在
-    config.resolve.fallback = config.resolve.fallback || {};
-    
-    // 添加 buffer 和 timers 的 polyfill
-    config.resolve.fallback.buffer = require.resolve('buffer/');
-    config.resolve.fallback.timers = require.resolve('timers-browserify');
-    config.resolve.fallback.stream = require.resolve('stream-browserify');
+  // Ensure the fallback field exists in the resolve object
+  config.resolve.fallback = config.resolve.fallback || {};
 
-    return config;
-  };
-  
+  // Add polyfills for buffer, timers, and stream
+  config.resolve.fallback.buffer = require.resolve('buffer/');
+  config.resolve.fallback.timers = require.resolve('timers-browserify');
+  config.resolve.fallback.stream = require.resolve('stream-browserify');
+
+  // Modify the webpack rules to safely exclude @mediapipe/tasks-vision from source-map-loader
+  config.module.rules = config.module.rules.map(rule => {
+      if (rule.loader && rule.loader.includes('source-map-loader')) {
+          if (Array.isArray(rule.exclude)) {
+              rule.exclude.push(/@mediapipe[\\/]tasks-vision/);
+          } else if (rule.exclude) {
+              // Convert existing exclusion to an array if it isn't already
+              rule.exclude = [rule.exclude, /@mediapipe[\\/]tasks-vision/];
+          } else {
+              // Set the exclude property as a new array with the needed exclusion
+              rule.exclude = [/@mediapipe[\\/]tasks-vision/];
+          }
+      }
+      return rule;
+  });
+
+  return config;
+};
