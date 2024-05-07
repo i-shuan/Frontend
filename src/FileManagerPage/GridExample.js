@@ -9,72 +9,43 @@ import { ClientSideRowModelModule } from "@ag-grid-community/client-side-row-mod
 import { v4 as uuidv4 } from 'uuid';
 import { convertToAntdTreeData } from "./ConvertToAntdTreeData";
 import { convertToAgGrid } from "./ConvertToAgGrid";
+import { convertJsonToAgGrid } from "./ConvertJsonToAgGrid";
 import { updateNodeType, addRowNode, removeSelectedNodes } from './NodeOperations';
 import { collectNodeData, pasteNode, flattenNodes } from './GridUtils';
 ModuleRegistry.registerModules([ClientSideRowModelModule, RowGroupingModule]);
 
 
 // Example data from Ant Design
-const antdData = [
+// Your JSON data
+const jsonData = [
   {
-    key: "1",
-    name: "LIST 1",
-    type: "LIST",
-    value: null,
-    children: [
+    "name": "LIST 1",
+    "type": "LIST",
+    "value": [
       {
-        key: "11",
-        name: "Item 1.1",
-        type: "U8",
-        value: "255",
-        children: [
+        "name": "LIST 2",
+        "type": "LIST",
+        "value": [
           {
-            key: "111",
-            name: "Subitem 1.1.1",
-            type: "A",
-            value: "Active"
+            "name": "Subitem 1.1.1",
+            "type": "A",
+            "value": "Active"
           },
           {
-            key: "112",
-            name: "Subitem 1.1.2",
-            type: "B",
-            value: "true"
+            "name": "Subitem 1.1.2",
+            "type": "B",
+            "value": "true"
           }
         ]
       },
       {
-        key: "12",
-        name: "Item 1.2",
-        type: "I4",
-        value: "-32",
-        children: [
+        "name": "LIST 2",
+        "type": "LIST",
+        "value": [
           {
-            key: "121",
-            name: "Subitem 1.2.1",
-            type: "U4",
-            value: "1024"
-          }
-        ]
-      }
-    ]
-  },
-  {
-    key: "2",
-    name: "LIST 2",
-    type: "LIST",
-    value: null,
-    children: [
-      {
-        key: "21",
-        name: "Item 2.1",
-        type: "I8",
-        value: "-9223372036854775808",
-        children: [
-          {
-            key: "211",
-            name: "Subitem 2.1.1",
-            type: "B",
-            value: "false"
+            "name": "Subitem 1.2.1",
+            "type": "U4",
+            "value": "1024"
           }
         ]
       }
@@ -84,7 +55,7 @@ const antdData = [
 
 const GridExample = () => {
   const gridRef = useRef();
-  const [rowData, setRowData] = useState(convertToAgGrid(antdData));
+  const [rowData, setRowData] = useState(convertJsonToAgGrid(jsonData));
   const [clipboard, setClipboard] = useState(null);
 
   useEffect(() => {
@@ -124,7 +95,7 @@ const GridExample = () => {
     {
       field: "value",
       headerName: "Value",
-      editable: true,
+      editable: params => params.data.type !== 'LIST', // 只有當 type 不是 'LIST' 時，value 欄位可編輯
       cellEditor: "agTextCellEditor" // 如果 value 是文本类型则使用 text editor，否则根据数据类型选择合适的 editor
     }
   ], []);
@@ -155,20 +126,17 @@ const GridExample = () => {
   }, []);
 
   const onCellValueChanged = useCallback((event) => {
-    // 检查是否是 'type' 字段发生了变更
     if (event.column.colId === 'type') {
       console.log(`Type changed for row ${event.data.key} to ${event.newValue}`);
-
-      // 根据新的类型值更新行
-      // 比如，可以在这里调用更新行数据的逻辑，或者是触发外部的 API 调用等
-      updateNodeType(event.data.key, event.newValue); // 假设有一个 updateRow 方法
+      const getChangeTypeData = updateNodeType(rowData, event.data.key, event.newValue);
+      setRowData(getChangeTypeData);
     }
-  }, []);
+  }, [rowData, setRowData]);
 
 
   return (
     <div style={{ width: "100%", height: "500px" }}>
-         <div>
+      <div>
         <button onClick={() => addRowNode(gridRef.current.api.getSelectedNodes()[0], rowData, setRowData)}>
           Add Row to 'New Folder'
         </button>
@@ -203,7 +171,7 @@ const GridExample = () => {
           onCellValueChanged={onCellValueChanged} // 在這裡設置 onCellValueChanged
         />
       </div>
-  
+
     </div>
   );
 };
