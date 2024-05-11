@@ -1,6 +1,8 @@
 import React from 'react';
 import { Steps, Card, Row, Col } from 'antd';
 import GridExample from './GridExample';
+import LogProcessor from './LogProcessor/LogProcessor';
+
 const { Step } = Steps;
 
 const FileManagerPage = () => {
@@ -27,7 +29,8 @@ const FileManagerPage = () => {
           </Col>
         </Row>
       </Col> */}
-      <GridExample/>
+      {/* <GridExample/> */}
+      <LogProcessor />
     </Row>
   );
 };
