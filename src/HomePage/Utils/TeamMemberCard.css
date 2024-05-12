@@ -1,0 +1,21 @@
+/* TeamMemberCard.css */
+.team-member-card {
+  /* background: white; */
+  padding: 1rem;
+  /* box-shadow: 0 4px 8px rgba(0,0,0,0.1); */
+  border-radius: 8px;
+  width: 300px; /* 或根據需要調整寬度 */
+  text-align: left; /* 確保所有文字都左對齊 */
+}
+
+.team-member-card h3 {
+  font-weight: bold; /* 設置標題為粗體 */
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.team-member-card p {
+  margin: 5px 0; /* 增加段落之間的間距 */
+  color: #666;
+  font-size: 14px;
+}

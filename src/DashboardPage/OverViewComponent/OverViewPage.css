@@ -14,7 +14,7 @@
 .summary-card-container .ant-card-head-title {
   text-align: left;
   
-  font-size: 1.5rem;
+  font-size: 1.125rem;
   font-weight: 600;
   color: #000;
   /* text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5) !important; */
@@ -27,7 +27,7 @@
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  gap: 0.5rem;
+  gap: 0.25rem;
   padding: 0 1rem;
 }
 
@@ -98,9 +98,122 @@
   color: #fff;
 }
 
-.above-container {
+.upper-container {
   display: flex;
   margin-top: 1rem;
   flex-wrap: row;
   gap: 2rem;
 }
+
+.lower-container {
+  display: flex;
+  margin-top: 0.5rem;
+  flex-wrap: row;
+  gap: 2rem;
+  
+}
+
+
+/* ChartCard */   
+.chart-card {
+  width: 40rem;
+  /* border: 1px solid #000; */
+  height: 16rem;
+  border-radius: 1rem;
+  width: 40%;
+  box-shadow: 0 13px 27px -5px rgba(50, 50, 93, 0.25), 0 8px 16px -8px rgba(0, 0, 0, 0.3);
+}
+
+.chart-card .ant-card-head {
+  height: 3rem !important;
+}
+
+.chart-card .ant-card-head-title {
+  text-align: left;
+  min-height: 2rem !important;
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #000;
+  /* text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5) !important; */
+}
+
+
+/* OverViewTable */
+
+.virtual-table-container .virtual-table-header{
+  font-size: 1.125rem !important;
+  font-weight: 600 !important;
+  text-align: left !important;
+  margin-left: 0
+}
+
+
+.virtual-table-container{
+  
+  direction: flex;
+  flex-direction: column;
+}
+
+
+/*MismatchList*/
+
+#scrollableDiv {
+  height: 16rem;
+  overflow: auto;
+  padding: 0 1rem;
+  border: 1px solid rgba(140, 140, 140, 0.35);
+  border-radius: 1rem;
+  width: 30%;
+  background-color: #fff;
+
+  box-shadow: 0 13px 27px -5px rgba(50, 50, 93, 0.25), 0 8px 16px -8px rgba(0, 0, 0, 0.3);
+}
+
+.mismatch-header {
+  text-align: left;
+  min-height: 2rem !important;
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #000;
+  padding-top: 1rem;
+}
+
+.list-item {
+  padding: 1rem;
+  border-bottom: 1px solid rgba(140, 140, 140, 0.35);
+  display: flex;
+  /* align-items: center; */
+  justify-content: space-between !important;
+  /* flex-wrap: wrap; */
+  text-align: left;
+}
+
+.list-item-content {
+  flex: 1 0 auto;
+}
+
+.list-item-action {
+  flex: 0 1 auto;
+  /* margin-left: 7rem; */
+}
+
+.list-item-text {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex-grow: 1;
+}
+
+.list-item-content div:first-child {
+  font-weight: bold;
+}
+
+.list-item-content div:last-child {
+  color: rgba(0, 0, 0, 0.45);
+}
+
+.list-item:hover {
+  background-color: rgba(140, 140, 140, 0.1);
+}
+
+

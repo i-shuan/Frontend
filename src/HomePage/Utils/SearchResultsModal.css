@@ -1,0 +1,12 @@
+.list-item {
+    border: 1px solid #e8e8e8;
+    /* 添加底部邊框 */
+    padding: 16px;
+    /* 添加內部填充 */
+    background-color: #fff;
+    /* 設置背景色為白色 */
+}
+
+.search-list {
+    margin-top: 1rem;
+}

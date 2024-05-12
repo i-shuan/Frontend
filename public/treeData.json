@@ -1,0 +1,38 @@
+
+[
+  {
+    "name": "LIST 1",
+    "type": "LIST",
+    "value": [
+      {
+        "name": "LIST 2",
+        "type": "LIST",
+        "value": [
+          {
+            "name": "Subitem 1.1.1",
+            "type": "A",
+            "value": "Active"
+          },
+          {
+            "name": "Subitem 1.1.2",
+            "type": "B",
+            "value": "true"
+          }
+        ]
+      },
+      {
+        "name": "LIST 2",
+        "type": "LIST",
+        "value": [
+          {
+            "name": "Subitem 1.2.1",
+            "type": "U4",
+            "value": "1024"
+          }
+        ]
+      }
+    ]
+  }
+ 
+]
+
