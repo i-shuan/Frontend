@@ -1,12 +1,38 @@
 import logo from './logo.svg';
+import React, { useState, useEffect } from 'react';
 import './App.css';
 import { HashRouter, Route, Switch, Routes } from 'react-router-dom';
 import { SettingOutlined, PieChartOutlined, FolderViewOutlined, MessageOutlined, HomeOutlined, BulbOutlined} from '@ant-design/icons';
 import Layouts from "./Layouts/Layouts"
 import HomePage from "./HomePage/LandingPage"
 import FileManagerPage from './FileManagerPage/FileManagerPage';
+// 在 App.js 或其他组件中
+import keycloak from './Keycloak';
+
+
 function App() {
 
+  useEffect(() => {
+    
+    if (localStorage.getItem('isLoggedIn') !== 'true') {
+      keycloak.init({ onLoad: 'login-required' })
+        .then(authenticated => {
+          if (authenticated) {
+            localStorage.setItem('isLoggedIn', 'true');
+            console.log("isLoggedIn",localStorage.getItem('isLoggedIn'))
+            console.log('User is authenticated');
+          } else {
+            console.log('User is not authenticated');
+          }
+        })
+        .catch(error => {
+          console.error('Keycloak initialization error:', error);
+        });
+    }
+
+  
+  }, []);
+  
   const menuItems = [
     { key: '0', group: 'MAIN', icon: <HomeOutlined />, title: 'HOME', path:"/", content:"Home Page" },
     // { key: '1', group: 'MAIN', icon: <PieChartOutlined />, title: 'DASHBOARD', path:"/Dashboard" },
