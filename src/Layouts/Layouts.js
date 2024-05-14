@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { Layout, Menu, Avatar } from 'antd';
-import { UserOutlined } from '@ant-design/icons';
+import { Layout, Menu, FloatButton, Modal } from 'antd';
+import { FileTextOutlined } from '@ant-design/icons';
 import { useNavigate, useLocation } from 'react-router-dom';
 import "./Layouts.css"
-const { Header, Content } = Layout;
+const { Header, Content, Footer } = Layout;
 
 const Layouts = (props) => {
   const [isOpen, setIsOpen] = useState(false);
   const [headerTitle, setHeaderTitle] = useState("HOME");
+
   const navigate = useNavigate();
   const location = useLocation();
   const menuItems = props.menuItems;
@@ -20,6 +21,15 @@ const Layouts = (props) => {
 
   const handleMenuClick = (item) => {
     navigate(item.path);
+  };
+
+
+  const handleFaqModalOpen = () => {
+    setIsOpen(true);
+  };
+
+  const handleFaqModalClose = () => {
+    setIsOpen(false);
   };
 
   return (
@@ -44,7 +54,32 @@ const Layouts = (props) => {
       </Header>
       <Content>
         {props.children}
+        <Modal
+          title="FAQ"
+          open={isOpen}
+          onCancel={handleFaqModalClose}
+          footer={null}
+        >
+          <h3>Frequently Asked Questions</h3>
+          <ul>
+            <li>Q1: What is this portal?</li>
+            <li>A1: This is the EA Operation Portal.</li>
+            <li>Q2: How do I navigate?</li>
+            <li>A2: Use the menu at the top to navigate between sections.</li>
+            {/* Add more FAQs as needed */}
+          </ul>
+        </Modal>
       </Content>
+      <Footer className='layout-footer-container'>
+        <FloatButton
+          icon={<FileTextOutlined />}
+          description="HELP INFO"
+          shape="square"
+          onClick={handleFaqModalOpen}
+        />
+
+      </Footer>
+
     </Layout>
   );
 };

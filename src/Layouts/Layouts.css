@@ -6,10 +6,12 @@
 .site-header {
   display: flex;
   align-items: center;
-  justify-content: flex-start; /* 確保從左側開始排列內容 */
+  justify-content: flex-start;
+  /* 確保從左側開始排列內容 */
   padding: 0 24px;
   background-color: #fff;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); /* 加強陰影效果 */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  /* 加強陰影效果 */
   font-family: 'Arapey', georgia, serif;
   font-style: italic;
   font-weight: bold;
@@ -18,26 +20,38 @@
 }
 
 
-.header-left, .header-right {
-  flex: 1; /* 讓兩側各佔一半空間 */
+.header-left,
+.header-right {
+  flex: 1;
+  /* 讓兩側各佔一半空間 */
 }
+
 .header-left {
-  flex-grow: 0; /* 給予標題更多空間 */
-  white-space: nowrap; /* 防止標題換行 */
+  flex-grow: 0;
+  /* 給予標題更多空間 */
+  white-space: nowrap;
+  /* 防止標題換行 */
 }
+
 .header-title {
   color: #2E4D7B;
   font-size: 2rem;
-  margin-right: 3rem; /* 確保標題之後的元素推到右邊 */
+  margin-right: 3rem;
+  /* 確保標題之後的元素推到右邊 */
 }
 
 
 .header-menu {
-  flex-grow: 0; /* 限制選單擴展 */
+  flex-grow: 0;
+  /* 限制選單擴展 */
   justify-content: flex-end;
   background-color: transparent;
 }
 
 .ant-menu-horizontal {
   border-bottom: none;
+}
+
+.layout-footer-container {
+  text-align: center;
 }
