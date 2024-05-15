@@ -1,55 +1,43 @@
 /* 通知的基本樣式 */
 .ant-notification-notice {
     position: relative;
-    /* 確保可以正確地放置偽元素 */
     padding-left: 10px;
-    /* 添加左邊距以留出條狀空間 */
 }
 
 /* 添加條狀效果的偽元素 */
 .ant-notification-notice::before {
     content: "";
-    /* 偽元素需要 content 屬性來顯示 */
     position: absolute;
     left: 0;
     top: 0;
     bottom: 0;
     width: 0.375rem;
-    /* 條狀的寬度 */
-    background-color: var(--red-700);
-    /* 條狀的顏色 */
 }
 
-.ant-notification .ant-notification-notice-wrapper .ant-notification-notice {
+/* Error notification styles */
+.ant-notification-notice-error::before {
+    background-color: var(--red-700);
+}
+
+.ant-notification .ant-notification-notice-wrapper .ant-notification-notice-error {
     background-color: var(--red-100);
     border: 2px solid var(--red-700);
     border-radius: 0.75rem;
     line-height: inherit;
-    /* 使用 'solid' 代替 'bold'，並設定邊框寬度為2px */
 }
 
-/* 調整通知圖標容器的樣式，使圖標垂直居中 */
 .ant-notification .ant-notification-notice-wrapper .ant-notification-notice-icon-error.anticon {
     display: flex;
-    /* 啟用 flexbox 布局 */
     align-items: center;
-    /* 垂直居中 */
     justify-content: center;
-    /* 水平居中 */
     height: 60%;
-    /* 容器高度撐滿，確保 SVG 也能垂直居中 */
     background-color: transparent;
     color: var(--red-700);
 }
 
-/* 直接調整 SVG 的填充色和大小 */
 .ant-notification .ant-notification-notice-wrapper .ant-notification-notice-icon-error svg {
-
-    /* 設定 SVG 圖標的填充色，這裡假設你有定義 --white 變數 */
     width: 2.25rem;
-    /* 讓 SVG 圖標填滿容器 */
     height: 2.25rem;
-    /* 保持 SVG 圖標的縱橫比 */
     background-color: transparent;
 }
 
@@ -59,5 +47,39 @@
 
 .ant-notification .ant-notification-notice-wrapper .ant-notification-notice-with-icon .ant-notification-notice-description {
     margin-inline-start: 3.5rem;
+}
 
+/* Success notification styles */
+.ant-notification-notice-success::before {
+    background-color: var(--green-700);
+}
+
+.ant-notification .ant-notification-notice-wrapper .ant-notification-notice-success {
+    background-color: var(--green-100);
+    border: 2px solid var(--green-700);
+    border-radius: 0.75rem;
+    line-height: inherit;
+}
+
+.ant-notification .ant-notification-notice-wrapper .ant-notification-notice-icon-success.anticon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 60%;
+    background-color: transparent;
+    color: var(--green-700);
+}
+
+.ant-notification .ant-notification-notice-wrapper .ant-notification-notice-icon-success svg {
+    width: 2.25rem;
+    height: 2.25rem;
+    background-color: transparent;
+}
+
+.ant-notification .ant-notification-notice-wrapper .ant-notification-notice-with-icon .ant-notification-notice-message {
+    margin-inline-start: 3.5rem;
+}
+
+.ant-notification .ant-notification-notice-wrapper .ant-notification-notice-with-icon .ant-notification-notice-description {
+    margin-inline-start: 3.5rem;
 }

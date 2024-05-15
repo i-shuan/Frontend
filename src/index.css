@@ -25,6 +25,18 @@
   --blue-800: #51627C;
   --blue-900: #445164;
   --blue-950: #2C343F;
+
+  --green-50: #F5F8F7;
+  --green-100: #DFE8E5;
+  --green-200: #BFD0CB;
+  --green-300: #98B0A9;
+  --green-400: #66817A;
+  --green-500: #57756D;
+  --green-600: #455C57;
+  --green-700: #394C47;
+  --green-800: #313E3B;
+  --green-900: #2B3634;
+  --green-950: #21302C;
 }
 
 body {
