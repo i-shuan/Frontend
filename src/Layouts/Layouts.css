@@ -34,7 +34,7 @@
 }
 
 .header-title {
-  color: #2E4D7B;
+  color: var(--blue-800);
   font-size: 2rem;
   margin-right: 3rem;
   /* 確保標題之後的元素推到右邊 */
@@ -43,15 +43,70 @@
 
 .header-menu {
   flex-grow: 0;
+
   /* 限制選單擴展 */
   justify-content: flex-end;
   background-color: transparent;
 }
 
 .ant-menu-horizontal {
-  border-bottom: none;
+  border-bottom: none !important;
 }
 
 .layout-footer-container {
   text-align: center;
+}
+
+/** 20240515 */
+
+/* 去除選中菜單項底下的線 */
+.ant-menu-horizontal>.ant-menu-item::after,
+.ant-menu-horizontal>.ant-menu-submenu::after {
+  border-bottom: none !important;
+}
+
+/* 覆蓋選中菜單項的背景色和邊框樣式 */
+.ant-menu-item-selected {
+
+  border-bottom: none !important;
+  /* 移除底部邊框 */
+}
+
+/* 覆蓋非選中菜單項的邊框樣式 */
+.ant-menu-item,
+.ant-menu-submenu {
+  border-bottom: none !important;
+  /* 移除底部邊框 */
+}
+
+.ant-menu-light.ant-menu-horizontal>.ant-menu-item-selected {
+  color: var(--blue-700) !important;
+}
+
+/* 設置 Menu 字體大小 */
+.ant-menu-title-content {
+  font-size: 1rem !important;
+}
+
+/* 選中菜單項文字放大和動畫效果 */
+@keyframes menu-item-zoom {
+  from {
+    transform: scale(1);
+  }
+
+  to {
+    transform: scale(1.275);
+  }
+}
+
+.ant-menu-item-selected {
+  animation: menu-item-zoom 0.3s forwards;
+}
+
+.ant-menu-item {
+  transition: transform 0.3s;
+}
+
+.ant-menu-item:hover {
+  transform: scale(1.1);
 }
