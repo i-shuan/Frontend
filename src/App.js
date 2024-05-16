@@ -15,6 +15,7 @@ import keycloak from './Keycloak';
 function App() {
 
   const userLevel = 2; // Example user level, you can set this dynamically based on user data
+  const userGroups = ['GroupA']; // Example user groups, set this dynamically based on user data
 
   useEffect(() => {
 
@@ -38,15 +39,15 @@ function App() {
   }, []);
 
   const rawMenuItems = [
-    { group: 'MAIN', icon: <HomeOutlined />, title: 'HOME', path: "/", content: "Home Page", level: 1 },
-    { group: 'MAIN', icon: <SettingOutlined />, title: 'Editor', path: "/XmlEditor", content: "Editor", level: 2 },
-    // { group: 'MAIN', icon: <SettingOutlined />, title: 'Config Manager', path:"/ConfigManager", level: 2 },
-    { group: 'MAIN', icon: <BulbOutlined />, title: 'SECS SIGNAL', path: "/SecsSignalsTable", content: "aaa", level: 3 },
-    { group: 'MAIN', icon: <FolderViewOutlined />, title: 'FileManager', path: "/FileManagerPage", content: "Secs Command Editor", level: 2 },
+    { group: 'MAIN', icon: <HomeOutlined />, title: 'HOME', path: "/", content: "Home Page", level: 1, groups: ['GroupA', 'GroupB'] },
+    { group: 'MAIN', icon: <SettingOutlined />, title: 'Editor', path: "/XmlEditor", content: "Editor", level: 2, groups: ['GroupA'] },
+    // { group: 'MAIN', icon: <SettingOutlined />, title: 'Config Manager', path:"/ConfigManager", level: 2, groups: ['GroupB'] },
+    { group: 'MAIN', icon: <BulbOutlined />, title: 'SECS SIGNAL', path: "/SecsSignalsTable", content: "aaa", level: 3, groups: ['GroupB'] },
+    { group: 'MAIN', icon: <FolderViewOutlined />, title: 'FileManager', path: "/FileManagerPage", content: "Secs Command Editor", level: 2, groups: ['GroupA', 'GroupB'] },
   ];
 
   const menuItems = rawMenuItems
-    .filter(item => item.level <= userLevel)
+    .filter(item => item.level <= userLevel && item.groups.some(group => userGroups.includes(group)))
     .map((item, index) => ({
       ...item,
       key: index.toString(),
