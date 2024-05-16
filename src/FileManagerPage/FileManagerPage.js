@@ -1,36 +1,29 @@
-import React from 'react';
-import { Steps, Card, Row, Col } from 'antd';
-import GridExample from './GridExample';
+import React, { useEffect } from 'react';
+import { Row, Col } from 'antd';
 import LogProcessor from './LogProcessor/LogProcessor';
 
-const { Step } = Steps;
+import { useSelector, useDispatch } from 'react-redux'; // 引入 useDispatch
+import { addTodoAsync } from "../store/todo-action";
 
 const FileManagerPage = () => {
+  const dispatch = useDispatch(); // 使用 useDispatch 來調用 Redux actions
+  const { list } = useSelector((state) => state.todos); // 確保這個路徑與你的 store 結構匹配
+  const defaultList = ["1", "2", "3"];
+
+  useEffect(() => {
+    if (list.length === 0) { // 檢查應該是 list.length === 0，意味著當列表為空時添加項目
+      dispatch(addTodoAsync("123", ""));
+    }
+  }, [list]); // 將 defaultList 和 dispatch 加入依賴列表
+
   return (
     <Row gutter={16}>
-      {/* <Col span={6}>
-        <Steps direction="vertical" current={1}>
-          <Step title="第一步" description="這是第一步的描述" />
-          <Step title="第二步" description="這是第二步的描述" />
-          <Step title="第三步" description="這是第三步的描述" />
-        </Steps>
+      <Col span={12}>
+        <LogProcessor />
       </Col>
-      <Col span={18}>
-        <Row gutter={16}>
-          <Col span={24}>
-            <Card title="卡片2" bordered={false}>
-              卡片內容
-            </Card>
-          </Col>
-          <Col span={24}>
-            <Card title="卡片3" bordered={false}>
-              卡片內容
-            </Card>
-          </Col>
-        </Row>
-      </Col> */}
-      {/* <GridExample/> */}
-      <LogProcessor />
+      <Col span={12}>
+
+      </Col>
     </Row>
   );
 };

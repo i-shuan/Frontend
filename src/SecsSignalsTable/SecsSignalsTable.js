@@ -5,7 +5,7 @@ import { DownloadFile } from "./DownloadFile";
 import DateTimeRangeFilter from "./DateTimeRangeFilter";
 import GroupComplete from "./GroupComplete"
 import ConvertJsonToLog from "./ConvertJsonToLog"
-import XmlEditor from './XmlEditor';
+
 import CustomCascader from './CustomCascader';
 
 const signalsMappingStruc = {
@@ -36,7 +36,6 @@ const SecsSignalsCard = () => {
       <GroupComplete />
       {/* <DownloadFile/> */}
       {/* <ConvertJsonToLog/> */}
-      {/* <XmlEditor/> */}
       <CustomCascader />
     </div>
   )

@@ -1,0 +1,85 @@
+/* 通知的基本樣式 */
+.ant-notification-notice {
+    position: relative;
+    padding-left: 10px;
+}
+
+/* 添加條狀效果的偽元素 */
+.ant-notification-notice::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 0.375rem;
+}
+
+/* Error notification styles */
+.ant-notification-notice-error::before {
+    background-color: var(--red-700);
+}
+
+.ant-notification .ant-notification-notice-wrapper .ant-notification-notice-error {
+    background-color: var(--red-100);
+    border: 2px solid var(--red-700);
+    border-radius: 0.75rem;
+    line-height: inherit;
+}
+
+.ant-notification .ant-notification-notice-wrapper .ant-notification-notice-icon-error.anticon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 60%;
+    background-color: transparent;
+    color: var(--red-700);
+}
+
+.ant-notification .ant-notification-notice-wrapper .ant-notification-notice-icon-error svg {
+    width: 2.25rem;
+    height: 2.25rem;
+    background-color: transparent;
+}
+
+.ant-notification .ant-notification-notice-wrapper .ant-notification-notice-with-icon .ant-notification-notice-message {
+    margin-inline-start: 3.5rem;
+}
+
+.ant-notification .ant-notification-notice-wrapper .ant-notification-notice-with-icon .ant-notification-notice-description {
+    margin-inline-start: 3.5rem;
+}
+
+/* Success notification styles */
+.ant-notification-notice-success::before {
+    background-color: var(--green-700);
+}
+
+.ant-notification .ant-notification-notice-wrapper .ant-notification-notice-success {
+    background-color: var(--green-100);
+    border: 2px solid var(--green-700);
+    border-radius: 0.75rem;
+    line-height: inherit;
+}
+
+.ant-notification .ant-notification-notice-wrapper .ant-notification-notice-icon-success.anticon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 60%;
+    background-color: transparent;
+    color: var(--green-700);
+}
+
+.ant-notification .ant-notification-notice-wrapper .ant-notification-notice-icon-success svg {
+    width: 2.25rem;
+    height: 2.25rem;
+    background-color: transparent;
+}
+
+.ant-notification .ant-notification-notice-wrapper .ant-notification-notice-with-icon .ant-notification-notice-message {
+    margin-inline-start: 3.5rem;
+}
+
+.ant-notification .ant-notification-notice-wrapper .ant-notification-notice-with-icon .ant-notification-notice-description {
+    margin-inline-start: 3.5rem;
+}

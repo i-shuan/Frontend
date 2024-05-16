@@ -1,3 +1,44 @@
+/* 在 src/App.css 中定義紅色和藍色階梯 */
+:root {
+  /* 紅色階梯 */
+  --red-50: #FCF4F5;
+  --red-100: #F9EAEC;
+  --red-200: #F3D8DD;
+  --red-300: #E9B8C1;
+  --red-400: #D88697;
+  --red-500: #CB687F;
+  --red-600: #B44A68;
+  --red-700: #973956;
+  --red-800: #7F324C;
+  --red-900: #6D2E45;
+  --red-950: #6D2E45;
+
+  /* 藍色階梯 */
+  --blue-50: #F5F8F9;
+  --blue-100: #E7EEF2;
+  --blue-200: #D5E0E8;
+  --blue-300: #B8CCD8;
+  --blue-400: #96B2C4;
+  --blue-500: #7C9BB5;
+  --blue-600: #6A87A6;
+  --blue-700: #607899;
+  --blue-800: #51627C;
+  --blue-900: #445164;
+  --blue-950: #2C343F;
+
+  --green-50: #F5F8F7;
+  --green-100: #DFE8E5;
+  --green-200: #BFD0CB;
+  --green-300: #98B0A9;
+  --green-400: #66817A;
+  --green-500: #57756D;
+  --green-600: #455C57;
+  --green-700: #394C47;
+  --green-800: #313E3B;
+  --green-900: #2B3634;
+  --green-950: #21302C;
+}
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -15,23 +56,26 @@ code {
 
 /* 在螢幕寬度小於1280px之間時，將根元素字體大小設置為12px */
 @media (max-width: 1280px) {
-  header{
+  header {
     font-size: 14px;
   }
-  *{
+
+  * {
     font-size: 12px;
   }
 }
 
 /* 在螢幕寬度大於等於1280px時，將根元素字體大小設置為14px */
 @media (min-width: 1281px) {
-  header{
+  header {
     font-size: 16px;
   }
-  *{
+
+  * {
     font-size: 14px;
   }
 }
+
 /* Scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
@@ -56,6 +100,6 @@ code {
   background-color: #f5f5f5;
 }
 
-:where(.css-dev-only-do-not-override-yp8pcc).ant-layout{
-  background: rgba(236,245,255, 0.2);
+:where(.css-dev-only-do-not-override-yp8pcc).ant-layout {
+  background: rgba(236, 245, 255, 0.2);
 }
