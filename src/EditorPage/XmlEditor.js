@@ -5,13 +5,10 @@ import { xml } from '@codemirror/lang-xml';
 import { basicSetup } from 'codemirror';
 import { Builder, parseString } from 'xml2js';
 import { Card, Radio } from 'antd';
-import { UnControlled as CodeMirror } from 'react-codemirror2';
-import 'codemirror/lib/codemirror.css';
-import 'codemirror/mode/xml/xml';
 import diff from 'deep-diff';  // 引入 deep-diff
 // 在 XmlEditor.js 文件中
-import { Debounce } from './Function/Debounce';
-import { SortJson } from './Function/SortJson';
+import { Debounce } from '../Utils/Debounce';
+import { SortJson } from '../Utils/SortJson';
 // 定義 JSON 範例
 // 定義 JSON 範例
 const jsonExamples = {
@@ -309,8 +306,8 @@ const XmlEditor = () => {
   };
 
 
- 
-  
+
+
   const compareJson = (originalJson, newJson) => {
     // Use the custom prefilter function in the diff call
     var lhs = SortJson(originalJson);
@@ -331,7 +328,7 @@ const XmlEditor = () => {
           const jsonFromXml = await parseXmlToJson(xmlToCompare);
           console.log("jsonFromXml", jsonFromXml)
           // 比較 JSON 結構
-   
+
           differences = compareJson(jsonExamples[key], jsonFromXml);
 
         }

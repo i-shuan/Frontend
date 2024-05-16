@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import './LandingPage.css';
-import AnimatedText from "../Components/AnimatedText";
-import TeamMemberCard from "./Utils/TeamMemberCard";
+import AnimatedText from "../Utils/AnimatedText";
+import TeamMemberCard from "./Components/TeamMemberCard";
 import { Input, Space, Modal } from 'antd';
 import { useNavigate } from 'react-router-dom';
-import SearchResultsModal from './Utils/SearchResultsModal';
+import SearchResultsModal from './Components/SearchResultsModal';
 
 const { Search } = Input;
 
@@ -20,7 +20,7 @@ const LandingPage = (props) => {
         const filteredResults = menuItems.filter(item =>
             item?.content.toLowerCase().includes(value.toLowerCase())
         );
-        console.log("filteredResults",filteredResults)
+        console.log("filteredResults", filteredResults)
         setSearchResults(filteredResults);
         setIsModalOpen(true);
     };
