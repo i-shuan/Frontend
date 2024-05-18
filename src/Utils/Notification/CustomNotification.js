@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+
 import { notification } from 'antd';
 import "./CustomNotification.css";
 import { NotificationTypeEnum, NotificationMessagesEnum } from "../../Enum/NotificationEnums"
