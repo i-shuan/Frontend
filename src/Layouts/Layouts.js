@@ -42,7 +42,7 @@ const Layouts = (props) => {
           <Menu
             className="header-menu"
             mode="horizontal"
-            defaultSelectedKeys={['1']}
+            defaultSelectedKeys={['0']}
             items={menuItems.map((item) => ({
               key: item.key,
               icon: item.icon,
