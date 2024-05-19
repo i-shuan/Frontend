@@ -1,7 +1,6 @@
-// src/App.js
 import React, { useState, useEffect, useRef } from 'react';
 import './App.css';
-import { HashRouter, Route, Routes } from 'react-router-dom';
+import { HashRouter, Route, Routes, useNavigate } from 'react-router-dom';
 import { SettingOutlined, FolderViewOutlined, HomeOutlined, BulbOutlined } from '@ant-design/icons';
 import Layouts from "./Layouts/Layouts";
 import HomePage from "./HomePage/LandingPage";
@@ -11,15 +10,16 @@ import SecsSignalsTable from './SecsSignalsTable/SecsSignalsTable';
 import keycloak from './Keycloak'; // 確保 keycloak.js 路徑正確
 import axios from 'axios';
 
-import { LOGIN_TIME_COOKIE, levels, getLevelValue } from './Enum/KeycloakEnums';
+import { LOGIN_TIME_COOKIE, levels, getLevelValue } from './Enum/UserProfileEnums';
 import { setLoginTimeCookie, checkLoginTimeCookie, setupMidnightLogout } from './Utils/AuthUtils';
 import Cookies from 'js-cookie';
-
+import { useDispatch, useSelector } from 'react-redux';
+import { setUserInfo, setDefaultUserLevel, resetUserProfileState } from "./store/userProfile-action";
 function App() {
-  const [userLevel, setUserLevel] = useState(0); // Example user level, you can set this dynamically based on user data
-  const userGroups = ['GroupA']; // Example user groups, set this dynamically based on user data
+
+  const dispatch = useDispatch();
+  const { simulatedLevel } = useSelector((state) => state.userProfile);
   const [kcInitialized, setKcInitialized] = useState(false); // 跟踪 Keycloak 是否已經初始化
-  const [userInfo, setUserInfo] = useState(null); // 存儲用戶信息
   const [routes, setRoutes] = useState([]); // 存儲菜單項
   const didInit = useRef(false); // 跟踪是否已經調用了初始化函數
 
@@ -28,10 +28,10 @@ function App() {
   };
 
   const rawMenuItems = [
-    { group: 'MAIN', icon: <HomeOutlined />, title: 'HOME', path: "/", content: "Home Page", level: 1, groups: ['GroupA', 'GroupB'] },
-    { group: 'MAIN', icon: <SettingOutlined />, title: 'Editor', path: "/XmlEditor", content: "Editor", level: 2, groups: ['GroupA'] },
-    { group: 'MAIN', icon: <BulbOutlined />, title: 'SECS SIGNAL', path: "/SecsSignalsTable", content: "aaa", level: 3, groups: ['GroupB'] },
-    { group: 'MAIN', icon: <FolderViewOutlined />, title: 'FileManager', path: "/FileManagerPage", content: "Secs Command Editor", level: 2, groups: ['GroupA', 'GroupB'] },
+    { group: 'MAIN', icon: <HomeOutlined />, title: 'HOME', path: "/", content: "Home Page", level: 1 },
+    { group: 'MAIN', icon: <SettingOutlined />, title: 'Editor', path: "/XmlEditor", content: "Editor", level: 2 },
+    { group: 'MAIN', icon: <BulbOutlined />, title: 'SECS SIGNAL', path: "/SecsSignalsTable", content: "aaa", level: 3 },
+    { group: 'MAIN', icon: <FolderViewOutlined />, title: 'FileManager', path: "/FileManagerPage", content: "Secs Command Editor", level: 4 },
   ];
 
   // 初始化 Keycloak
@@ -41,20 +41,19 @@ function App() {
       if (authenticated) {
         setKcInitialized(true); // 標記 Keycloak 已初始化
 
-        setUserInfo(keycloak); // 存儲用戶信息
+        dispatch(setUserInfo(keycloak)); // 存儲用戶信息
         console.log("keycloak", keycloak);
 
         const { dept, section, preferred_username } = keycloak.idTokenParsed;
 
         // 調整 Axios 請求以正確獲取權限級別
         const response = await axios.get(`${urlEndpoint.getPermissionUrl}`, {
-          params: { dept, section, preferred_username: 'bob' }
+          params: { dept, section, preferred_username }
         });
         const level = response.data.level;
-        setUserLevel(level); // 假設返回的對象中包含 level 屬性
+        dispatch(setDefaultUserLevel(level)); // 假設返回的對象中包含 level 屬性
 
         setLoginTimeCookie(); // 設置登錄時間 Cookie
-        updateRoutes(getLevelValue(level)); // 獲取權限級別後更新 routes
         console.log("level", level);
       } else {
         console.error('Keycloak authentication failed');
@@ -62,17 +61,6 @@ function App() {
     } catch (error) {
       console.error('Keycloak initialization failed', error);
     }
-  };
-
-  const updateRoutes = (level) => {
-    const filteredMenuItems = rawMenuItems
-      .filter(item => item.level <= level && item.groups.some(group => userGroups.includes(group)))
-      .map((item, index) => ({
-        ...item,
-        key: index.toString(),
-      }));
-
-    setRoutes(filteredMenuItems);
   };
 
   useEffect(() => {
@@ -93,18 +81,31 @@ function App() {
           Cookies.remove(LOGIN_TIME_COOKIE); // 移除登錄時間 Cookie
           setKcInitialized(false); // 重置 Keycloak 初始化狀態
           didInit.current = false; // 重置初始化標記
+          dispatch(resetUserProfileState());
         } else {
           keycloak.updateToken(30).catch(() => {
             keycloak.logout();
             Cookies.remove(LOGIN_TIME_COOKIE); // 移除登錄時間 Cookie
             setKcInitialized(false); // 重置 Keycloak 初始化狀態
             didInit.current = false; // 重置初始化標記
+            dispatch(resetUserProfileState());
           });
         }
       }, 10000); // 每 10 秒檢查一次 token 有效性和登錄時間 Cookie
       return () => clearInterval(interval);
     }
   }, [kcInitialized]); // 依賴 kcInitialized 確保只在初始化時和登錄時運行
+
+  useEffect(() => {
+    const filteredMenuItems = rawMenuItems
+      .filter(item => item.level <= getLevelValue(simulatedLevel))
+      .map((item, index) => ({
+        ...item,
+        key: index.toString(),
+      }));
+
+    setRoutes(filteredMenuItems);
+  }, [simulatedLevel]);
 
   // 如果 Keycloak 沒有初始化，顯示加載中
   if (!kcInitialized) {
@@ -122,19 +123,6 @@ function App() {
             <Route path="/FileManagerPage" element={<FileManagerPage />} />
           </Routes>
         </Layouts>
-        {userInfo && (
-          <div>
-            <h3>User Information</h3>
-            <p>Name: {userInfo.firstName} {userInfo.lastName}</p>
-            <p>Email: {userInfo.email}</p>
-            <button onClick={() => {
-              keycloak.logout();
-              Cookies.remove(LOGIN_TIME_COOKIE); // 移除登錄時間 Cookie
-              setKcInitialized(false); // 重置 Keycloak 初始化狀態
-              didInit.current = false; // 重置初始化標記
-            }}>Logout</button>
-          </div>
-        )}
       </HashRouter>
     </div>
   );

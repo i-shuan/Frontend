@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Layout, Menu, FloatButton, Modal } from 'antd';
+import { Layout, FloatButton, Modal } from 'antd';
 import { FileTextOutlined } from '@ant-design/icons';
 import { useNavigate, useLocation } from 'react-router-dom';
-import "./Layouts.css"
+import HeaderMenu from './Components/HeaderMenu';
+import SimulateLevelMenu from './Components/SimulateLevelMenu';
+import "./Layouts.css";
+
 const { Header, Content, Footer } = Layout;
 
 const Layouts = (props) => {
@@ -12,17 +15,12 @@ const Layouts = (props) => {
   const navigate = useNavigate();
   const location = useLocation();
   const menuItems = props.menuItems;
-  console.log("headerTitle", headerTitle)
+
   useEffect(() => {
     const currentPath = location.pathname;
     const matchedItem = menuItems.find(item => item.path === currentPath);
     setHeaderTitle(matchedItem ? matchedItem.title : "HOME");
   }, [location, menuItems]);
-
-  const handleMenuClick = (item) => {
-    navigate(item.path);
-  };
-
 
   const handleFaqModalOpen = () => {
     setIsOpen(true);
@@ -39,17 +37,8 @@ const Layouts = (props) => {
           <span className="header-title">{headerTitle !== "HOME" ? headerTitle : 'EA Operation Portal'}</span>
         </div>
         <div className="header-right">
-          <Menu
-            className="header-menu"
-            mode="horizontal"
-            defaultSelectedKeys={['0']}
-            items={menuItems.map((item) => ({
-              key: item.key,
-              icon: item.icon,
-              label: item.title,
-              onClick: () => navigate(item.path)
-            }))}
-          />
+          <HeaderMenu menuItems={menuItems} />
+          <SimulateLevelMenu />
         </div>
       </Header>
       <Content>
@@ -77,9 +66,7 @@ const Layouts = (props) => {
           shape="square"
           onClick={handleFaqModalOpen}
         />
-
       </Footer>
-
     </Layout>
   );
 };
