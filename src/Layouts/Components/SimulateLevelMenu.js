@@ -5,17 +5,17 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Menu, Dropdown, Button } from 'antd';
 import { setSimulatedLevel } from '../../store/userProfile-action';
 import { levelKeys } from '../../Enum/UserProfileEnums';
-import { useNavigate } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 
 const SimulateLevelMenu = () => {
     const dispatch = useDispatch();
-    const navigate = useNavigate();
+    const history = useHistory();
     const defaultUserLevel = useSelector(state => state.userProfile.defaultUserLevel);
     const simulatedLevel = useSelector(state => state.userProfile.simulatedLevel);
 
     const handleMenuClick = (e) => {
         dispatch(setSimulatedLevel(e.key));
-        navigate("/")
+        history.push("/");
     };
 
     const menu = (
@@ -31,7 +31,7 @@ const SimulateLevelMenu = () => {
             {defaultUserLevel === levelKeys.S && (
                 <Dropdown overlay={menu}>
                     <Button>
-                        模擬為 {simulatedLevel || "選擇級別"}
+                        模拟为 {simulatedLevel || "选择级别"}
                     </Button>
                 </Dropdown>
             )}

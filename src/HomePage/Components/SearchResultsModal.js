@@ -1,13 +1,13 @@
 import React from 'react';
 import { Modal, List, Button } from 'antd';
-import { useNavigate } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import './SearchResultsModal.css'
 
 const SearchResultsModal = ({ isModalOpen, handleOk, handleCancel, searchResults }) => {
-    const navigate = useNavigate();
+    const history = useHistory();
 
     const goToItem = (path) => {
-        navigate(path);
+        history.push(path);
         handleOk();  // Assuming handleOk will also close the modal
     };
 

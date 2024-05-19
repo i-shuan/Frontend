@@ -1,10 +1,10 @@
 // src/Layouts/Components/HeaderMenu.js
 import React from 'react';
 import { Menu } from 'antd';
-import { useNavigate } from 'react-router-dom';
 
+import { useHistory } from 'react-router-dom';
 const HeaderMenu = ({ menuItems }) => {
-    const navigate = useNavigate();
+    const history = useHistory();
 
     return (
         <Menu
@@ -15,7 +15,7 @@ const HeaderMenu = ({ menuItems }) => {
                 key: item.key,
                 icon: item.icon,
                 label: item.title,
-                onClick: () => navigate(item.path),
+                onClick: () => history.push(item.path),
             }))}
         />
     );

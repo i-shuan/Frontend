@@ -3,14 +3,13 @@ import './LandingPage.css';
 import AnimatedText from "../Utils/AnimatedText/AnimatedText";
 import TeamMemberCard from "./Components/TeamMemberCard";
 import { Input } from 'antd';
-import { useNavigate } from 'react-router-dom';
+
 import SearchResultsModal from './Components/SearchResultsModal';
 
 const { Search } = Input;
 
 const LandingPage = (props) => {
 
-    const navigate = useNavigate();
     const menuItems = props.menuItems;
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [searchResults, setSearchResults] = useState([]);

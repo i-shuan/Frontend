@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Layout, FloatButton, Modal } from 'antd';
 import { FileTextOutlined } from '@ant-design/icons';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import HeaderMenu from './Components/HeaderMenu';
 import SimulateLevelMenu from './Components/SimulateLevelMenu';
 import "./Layouts.css";
@@ -12,7 +12,6 @@ const Layouts = (props) => {
   const [isOpen, setIsOpen] = useState(false);
   const [headerTitle, setHeaderTitle] = useState("HOME");
 
-  const navigate = useNavigate();
   const location = useLocation();
   const menuItems = props.menuItems;
 
