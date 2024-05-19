@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useRef } from 'react';
 import './App.css';
 import { Route, Switch, useHistory, useLocation } from 'react-router-dom';
@@ -157,6 +158,11 @@ function App() {
 
     setRoutes(filteredMenuItems);
   }, [simulatedLevel]);
+
+  // 如果 Keycloak 没有初始化，显示加载中
+  if (!kcInitialized) {
+    return <div>Loading...</div>;
+  }
 
   // 如果 Keycloak 没有初始化，显示加载中
   if (!kcInitialized) {
