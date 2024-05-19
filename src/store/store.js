@@ -1,12 +1,11 @@
 // store.js
 import { configureStore } from '@reduxjs/toolkit';
 import todoReducer from './todo-slice';
-import keycloakReducer from './keycloak-slice';
-
+import userProfileReducer from './userProfile-slice';
 const store = configureStore({
   reducer: {
     todos: todoReducer,
-    keycloak: keycloakReducer
+    userProfile: userProfileReducer
   },
 });
 

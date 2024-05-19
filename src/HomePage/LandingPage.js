@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import './LandingPage.css';
-import AnimatedText from "../Utils/AnimatedText";
+import AnimatedText from "../Utils/AnimatedText/AnimatedText";
 import TeamMemberCard from "./Components/TeamMemberCard";
-import { Input, Space, Modal } from 'antd';
+import { Input } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import SearchResultsModal from './Components/SearchResultsModal';
 
