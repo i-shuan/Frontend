@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useRef } from 'react';
 import './App.css';
 import { HashRouter, Route, Routes, useNavigate } from 'react-router-dom';
@@ -9,6 +10,7 @@ import XmlEditor from './EditorPage/XmlEditor';
 import SecsSignalsTable from './SecsSignalsTable/SecsSignalsTable';
 import keycloak from './Keycloak'; // 確保 keycloak.js 路徑正確
 import axios from 'axios';
+
 
 import { LOGIN_TIME_COOKIE, levels, getLevelValue } from './Enum/UserProfileEnums';
 import { setLoginTimeCookie, checkLoginTimeCookie, setupMidnightLogout } from './Utils/AuthUtils';
@@ -112,6 +114,11 @@ function App() {
     return <div>Loading...</div>;
   }
 
+  // 如果 Keycloak 没有初始化，显示加载中
+  if (!kcInitialized) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <div className="App">
       <HashRouter>
@@ -123,6 +130,19 @@ function App() {
             <Route path="/FileManagerPage" element={<FileManagerPage />} />
           </Routes>
         </Layouts>
+        {userInfo && (
+          <div>
+            <h3>User Information</h3>
+            <p>Name: {userInfo.firstName} {userInfo.lastName}</p>
+            <p>Email: {userInfo.email}</p>
+            <button onClick={() => {
+              keycloak.logout();
+              Cookies.remove(LOGIN_TIME_COOKIE); // 移除登录时间 Cookie
+              setKcInitialized(false); // 重置 Keycloak 初始化状态
+              didInit.current = false; // 重置初始化标记
+            }}>Logout</button>
+          </div>
+        )}
       </HashRouter>
     </div>
   );
