@@ -15,7 +15,6 @@ import { setLoginTimeCookie, checkLoginTimeCookie, setupMidnightLogout } from '.
 import Cookies from 'js-cookie';
 import { useDispatch, useSelector } from 'react-redux';
 import { setUserInfo, setDefaultUserLevel, resetUserProfileState } from "./store/userProfile-action";
-import DefaultRoute from './DefaultRoute'; // 导入 DefaultRoute 组件
 import NoAccessPage from './NoAccessPage'; // 导入 NoAccessPage 组件
 
 const fixUrl = (url) => {
