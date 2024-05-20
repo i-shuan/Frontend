@@ -15,7 +15,7 @@ import { setLoginTimeCookie, checkLoginTimeCookie, setupMidnightLogout } from '.
 import Cookies from 'js-cookie';
 import { useDispatch, useSelector } from 'react-redux';
 import { setUserInfo, setDefaultUserLevel, resetUserProfileState } from "./store/userProfile-action";
-import ProtectedRoute from './ProtectedRoute'; // 导入 ProtectedRoute 组件
+import DefaultRoute from './DefaultRoute'; // 导入 DefaultRoute 组件
 import NoAccessPage from './NoAccessPage'; // 导入 NoAccessPage 组件
 
 const fixUrl = (url) => {
@@ -50,15 +50,16 @@ function App() {
   const history = useHistory();
   const location = useLocation(); // 获取当前路径
 
+  console.log("routes", routes)
   const urlEndpoint = {
     getPermissionUrl: process.env.REACT_APP_ENV_URL + '/v1/getPermissionLevel'
   };
 
   const rawMenuItems = [
-    { group: 'MAIN', icon: <HomeOutlined />, title: 'HOME', path: "/", content: "Home Page", level: 1 },
-    { group: 'MAIN', icon: <SettingOutlined />, title: 'Editor', path: "/XmlEditor", content: "Editor", level: 2 },
-    { group: 'MAIN', icon: <BulbOutlined />, title: 'SECS SIGNAL', path: "/SecsSignalsTable", content: "aaa", level: 3 },
-    { group: 'MAIN', icon: <FolderViewOutlined />, title: 'FileManager', path: "/FileManagerPage", content: "Secs Command Editor", level: 4 },
+    { group: 'MAIN', icon: <HomeOutlined />, title: 'HOME', component: HomePage, path: "/", content: "Home Page", level: 1, extraProps: { routes: routes } },
+    { group: 'MAIN', icon: <SettingOutlined />, title: 'Editor', component: XmlEditor, path: "/XmlEditor", content: "Editor", level: 2 },
+    { group: 'MAIN', icon: <BulbOutlined />, title: 'SECS SIGNAL', component: SecsSignalsTable, path: "/SecsSignalsTable", content: "aaa", level: 3 },
+    { group: 'MAIN', icon: <FolderViewOutlined />, title: 'FileManager', component: FileManagerPage, path: "/FileManagerPage", content: "Secs Command Editor", level: 4 },
   ];
 
   // 初始化 Keycloak
@@ -78,7 +79,7 @@ function App() {
         //   params: { dept, section, preferred_username }
         // });
         // const level = response.data.level;
-        const level = "S";
+        const level = "D";
         dispatch(setDefaultUserLevel(level)); // 假设返回的对象中包含 level 属性
 
         setLoginTimeCookie(); // 设置登录时间 Cookie
@@ -91,16 +92,6 @@ function App() {
     }
   };
 
-  // const fixUrl = (url) => {
-  //   const parts = url.split('&');
-  //   if (parts.length > 1) {
-  //     const path = parts[0];
-  //     const queryParams = parts.slice(1).join('&');
-  //     return `${path}?${queryParams}`;
-  //   }
-  //   return url;
-  // };
-
   useEffect(() => {
     const initialize = async () => {
       if (!didInit.current) {
@@ -108,18 +99,18 @@ function App() {
         await initKeycloak(); // 初始化 Keycloak
 
         // 模拟异常的 location.pathname 情况
-        let locationPathname = `http://localhost:3000/#/&state=f193e4bd-fce4-4d81-ab92-04c1f40a1534?session_state=b066b117-5616-41da-b4a2-d3119aae3594?state=7958d51c-8865-4590-aba0-59e3756363fc?session_state=b066b117-5616-41da-b4a2-d3119aae3594&iss=http%3A%2F%2Flocalhost%3A8080%2Frealms%2Fquick-start&code=3a724e9b-a19d-499d-93cc-c4868230ca60.b066b117-5616-41da-b4a2-d3119aae3594.c7d03cb5-1b0a-449e-9b86-303439f07dcf&state=a00ca26b-d9e7-4205-9506-de379d711762&session_state=b066b117-5616-41da-b4a2-d3119aae3594&iss=http%3A%2F%2Flocalhost%3A8080%2Frealms%2Fquick-start&code=f7ec1163-6b73-47d1-9738-0afa43b5de3f.b066b117-5616-41da-b4a2-d3119aae3594.c7d03cb5-1b0a-449e-9b86-303439f07dcf`;
-        console.log("location.pathname----------------");
-        console.log("location.pathname", locationPathname);
+        // let locationPathname = `http://localhost:3000/#/&state=f193e4bd-fce4-4d81-ab92-04c1f40a1534?session_state=b066b117-5616-41da-b4a2-d3119aae3594?state=7958d51c-8865-4590-aba0-59e3756363fc?session_state=b066b117-5616-41da-b4a2-d3119aae3594&iss=http%3A%2F%2Flocalhost%3A8080%2Frealms%2Fquick-start&code=3a724e9b-a19d-499d-93cc-c4868230ca60.b066b117-5616-41da-b4a2-d3119aae3594.c7d03cb5-1b0a-449e-9b86-303439f07dcf&state=a00ca26b-d9e7-4205-9506-de379d711762&session_state=b066b117-5616-41da-b4a2-d3119aae3594&iss=http%3A%2F%2Flocalhost%3A8080%2Frealms%2Fquick-start&code=f7ec1163-6b73-47d1-9738-0afa43b5de3f.b066b117-5616-41da-b4a2-d3119aae3594.c7d03cb5-1b0a-449e-9b86-303439f07dcf`;
+        // console.log("location.pathname----------------");
+        // console.log("location.pathname", locationPathname);
 
-        // 修正URL，避免出现&state等附加参数，保持在当前页面
-        const fixedUrl = fixUrl(locationPathname);
-        console.log("fixedUrl----------------");
-        console.log("fixedUrl", fixedUrl);
+        // // 修正URL，避免出现&state等附加参数，保持在当前页面
+        // const fixedUrl = fixUrl(locationPathname);
+        // console.log("fixedUrl----------------");
+        // console.log("fixedUrl", fixedUrl);
 
-        if (fixedUrl !== locationPathname) {
-          history.replace(fixedUrl);
-        }
+        // if (fixedUrl !== locationPathname) {
+        //   history.replace(fixedUrl);
+        // }
       }
     };
 
@@ -170,17 +161,24 @@ function App() {
   }
 
   return (
-    <div className="App">
-      <Layouts menuItems={routes}>
-        <Switch>
-          <Route exact path="/" component={HomePage} />
-          <ProtectedRoute path="/XmlEditor" component={XmlEditor} requiredLevel={2} />
-          <ProtectedRoute path="/SecsSignalsTable" component={SecsSignalsTable} requiredLevel={3} />
-          <ProtectedRoute path="/FileManagerPage" component={FileManagerPage} requiredLevel={4} />
-          <Route path="/no-access" component={NoAccessPage} />
-        </Switch>
-      </Layouts>
-    </div>
+
+    <Layouts menuItems={routes}>
+      <Switch>
+        {routes.map((item, index) => (
+          <Route
+            key={index}
+            path={item.path}
+            exact
+            render={(props) => {
+              console.log(`Rendering component for path: ${item.path}`);
+              return <item.component {...props} {...(item.extraProps || {})} />;
+            }}
+          />
+        ))}
+        <Route path="*" component={getLevelValue(simulatedLevel) >= 1 ? HomePage : NoAccessPage} />
+      </Switch>
+    </Layouts>
+
   );
 }
 
