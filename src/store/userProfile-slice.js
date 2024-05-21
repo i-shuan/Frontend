@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { levelKeys } from '../Enum/UserProfileEnums';
+import { levelKeys } from '../Config/UserProfileConfig';
 
 const initialState = {
     userInfo: null,

@@ -1,7 +1,7 @@
 
 import { notification } from 'antd';
 import "./CustomNotification.css";
-import { NotificationTypeEnum, NotificationMessagesEnum } from "../../Enum/NotificationEnums"
+import { NotificationTypeEnum, NotificationMessagesEnum } from "../../Config/ComponentsConfig/NotificationConfig"
 
 const hasEmptyValues = (data) => {
     const isEmpty = (value) => {

@@ -3,7 +3,7 @@ import React from 'react';
 import { Menu } from 'antd';
 
 import { useHistory } from 'react-router-dom';
-const HeaderMenu = ({ menuItems }) => {
+const HeaderMenu = ({ routes }) => {
     const history = useHistory();
 
     return (
@@ -11,7 +11,7 @@ const HeaderMenu = ({ menuItems }) => {
             className="header-menu"
             mode="horizontal"
             defaultSelectedKeys={['0']}
-            items={menuItems.map((item) => ({
+            items={routes.map((item) => ({
                 key: item.key,
                 icon: item.icon,
                 label: item.title,

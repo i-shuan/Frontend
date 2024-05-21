@@ -1,6 +1,6 @@
 // src/Utils/AuthUtils
 import Cookies from 'js-cookie';
-import { SIGNATURE_KEY, LOGIN_TIME_COOKIE, TWENTY_FOUR_HOURS } from '../Enum/UserProfileEnums';
+import { SIGNATURE_KEY, LOGIN_TIME_COOKIE, TWENTY_FOUR_HOURS } from '../Config/UserProfileConfig';
 import { sign, verify } from './Sign';
 import keycloak from '../Keycloak';
 

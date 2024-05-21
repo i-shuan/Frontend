@@ -4,7 +4,7 @@ import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Menu, Dropdown, Button } from 'antd';
 import { setSimulatedLevel } from '../../store/userProfile-action';
-import { levelKeys } from '../../Enum/UserProfileEnums';
+import { levelKeys } from '../../Config/UserProfileConfig';
 import { useHistory } from 'react-router-dom';
 
 const SimulateLevelMenu = () => {

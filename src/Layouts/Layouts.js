@@ -13,13 +13,13 @@ const Layouts = (props) => {
   const [headerTitle, setHeaderTitle] = useState("HOME");
 
   const location = useLocation();
-  const menuItems = props.menuItems;
+  const routes = props.routes;
 
   useEffect(() => {
     const currentPath = location.pathname;
-    const matchedItem = menuItems.find(item => item.path === currentPath);
+    const matchedItem = routes.find(item => item.path === currentPath);
     setHeaderTitle(matchedItem ? matchedItem.title : "HOME");
-  }, [location, menuItems]);
+  }, [location, routes]);
 
   const handleFaqModalOpen = () => {
     setIsOpen(true);
@@ -36,7 +36,7 @@ const Layouts = (props) => {
           <span className="header-title">{headerTitle !== "HOME" ? headerTitle : 'EA Operation Portal'}</span>
         </div>
         <div className="header-right">
-          <HeaderMenu menuItems={menuItems} />
+          <HeaderMenu routes={routes} />
           <SimulateLevelMenu />
         </div>
       </Header>

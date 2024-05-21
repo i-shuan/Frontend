@@ -4,25 +4,26 @@ import AnimatedText from "../Utils/AnimatedText/AnimatedText";
 import TeamMemberCard from "./Components/TeamMemberCard";
 import { Input } from 'antd';
 
-import SearchResultsModal from './Components/SearchResultsModal';
-
+// import SearchResultsModal from './Components/SearchResultsModal';
+import SearchAutoComplete from './Components/SearchAutoComplete';
 const { Search } = Input;
 
 const LandingPage = (props) => {
 
-    const menuItems = props.menuItems;
+    const routes = props.routes;
+    console.log("routes", routes)
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [searchResults, setSearchResults] = useState([]);
 
-    const onSearch = (value) => {
-        console.log("Search Input:", value);
-        const filteredResults = menuItems.filter(item =>
-            item?.content.toLowerCase().includes(value.toLowerCase())
-        );
-        console.log("filteredResults", filteredResults)
-        setSearchResults(filteredResults);
-        setIsModalOpen(true);
-    };
+    // const onSearch = (value) => {
+    //     console.log("Search Input:", value);
+    //     const filteredResults = menuItems.filter(item =>
+    //         item?.content.toLowerCase().includes(value.toLowerCase())
+    //     );
+    //     console.log("filteredResults", filteredResults)
+    //     setSearchResults(filteredResults);
+    //     setIsModalOpen(true);
+    // };
 
 
     const handleOk = () => {
@@ -37,7 +38,8 @@ const LandingPage = (props) => {
         <div className="landing-page">
             <div className="header-section">
                 <AnimatedText text="WELCOME TO EA OPERATION PORTAL" />
-                <Search placeholder="Search..." onSearch={onSearch} className="search-input" />
+                {/* <Search placeholder="Search..." onSearch={onSearch} className="search-input" /> */}
+                <SearchAutoComplete routes={routes} />
             </div>
 
             <h1 className="h1">Team Member</h1>
@@ -60,12 +62,12 @@ const LandingPage = (props) => {
                 />
             </div>
 
-            <SearchResultsModal
+            {/* <SearchResultsModal
                 isModalOpen={isModalOpen}
                 handleOk={handleOk}
                 handleCancel={handleCancel}
                 searchResults={searchResults}
-            />
+            /> */}
         </div>
     );
 };
