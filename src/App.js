@@ -5,9 +5,7 @@ import { Route, Switch, useHistory, useLocation } from 'react-router-dom';
 import { SettingOutlined, FolderViewOutlined, HomeOutlined, BulbOutlined } from '@ant-design/icons';
 import Layouts from "./Layouts/Layouts";
 import HomePage from "./HomePage/LandingPage";
-import FileManagerPage from './FileManagerPage/FileManagerPage';
-import XmlEditor from './EditorPage/XmlEditor';
-import SecsSignalsTable from './SecsSignalsTable/SecsSignalsTable';
+
 import keycloak from './Keycloak'; // 确保 keycloak.js 路径正确
 import axios from 'axios';
 import { LOGIN_TIME_COOKIE, levels, getLevelValue } from './Config/UserProfileConfig';
@@ -16,6 +14,8 @@ import Cookies from 'js-cookie';
 import { useDispatch, useSelector } from 'react-redux';
 import { setUserInfo, setDefaultUserLevel, resetUserProfileState } from "./store/userProfile-action";
 import NoAccessPage from './NoAccessPage'; // 导入 NoAccessPage 组件
+import RoutesConfig from "./Config/TabsConfig/RoutesConfig"
+import { constrainedMemory } from 'process';
 
 const fixUrl = (pathname) => {
   try {
@@ -51,12 +51,6 @@ function App() {
     getPermissionUrl: process.env.REACT_APP_ENV_URL + '/v1/getPermissionLevel'
   };
 
-  const rawMenuItems = [
-    { group: 'MAIN', icon: <HomeOutlined />, title: 'HOME', component: HomePage, path: "/", content: "Home Page", level: 1 },
-    { group: 'MAIN', icon: <SettingOutlined />, title: 'Editor', component: XmlEditor, path: "/XmlEditor", content: "Editor", level: 2 },
-    { group: 'MAIN', icon: <BulbOutlined />, title: 'SECS SIGNAL', component: SecsSignalsTable, path: "/SecsSignalsTable", content: "aaa", level: 3 },
-    { group: 'MAIN', icon: <FolderViewOutlined />, title: 'FileManager', component: FileManagerPage, path: "/FileManagerPage", content: "Secs Command Editor", level: 4 },
-  ];
 
   // 初始化 Keycloak
   const initKeycloak = async () => {
@@ -75,7 +69,7 @@ function App() {
         //   params: { dept, section, preferred_username }
         // });
         // const level = response.data.level;
-        const level = "S";
+        const level = "B";
         dispatch(setDefaultUserLevel(level)); // 假设返回的对象中包含 level 属性
 
         setLoginTimeCookie(); // 设置登录时间 Cookie
@@ -136,14 +130,15 @@ function App() {
   }, [kcInitialized, dispatch, history, location]);
 
   useEffect(() => {
-    const filteredMenuItems = rawMenuItems
-      .filter(item => item.level <= getLevelValue(simulatedLevel))
+    console.log("RoutesConfig", RoutesConfig)
+    const filteredRoutes = RoutesConfig
+      .filter(item => item.requiredLevel <= getLevelValue(simulatedLevel))
       .map((item, index) => ({
         ...item,
         key: index.toString(),
       }));
 
-    setRoutes(filteredMenuItems);
+    setRoutes(filteredRoutes);
   }, [simulatedLevel]);
 
   // 如果 Keycloak 没有初始化，显示加载中

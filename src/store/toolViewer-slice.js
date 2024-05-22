@@ -1,6 +1,6 @@
 // src/store/toolViewer-slice.js
 import { createSlice } from '@reduxjs/toolkit';
-import { FileManagerTabsKeyEnum } from '../Config/TabsConfig/FileManagerTabsConfig';
+import { FileManagerTabsKeyEnum } from '../Config/AppRoutesConfig';
 
 const initialState = {
     activeTabKey: FileManagerTabsKeyEnum.FILE_MANAGER,

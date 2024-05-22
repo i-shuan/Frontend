@@ -3,16 +3,21 @@ import React from 'react';
 import { Tabs } from 'antd';
 import { FileManagerTabs } from '../Config/TabsConfig/FileManagerTabsConfig';
 import { TabsRoutesEnum } from '../Config/AppRoutesConfig';
+import { LOGIN_TIME_COOKIE, levels, getLevelValue } from '../Config/UserProfileConfig';
+
 import { useDispatch, useSelector } from 'react-redux';
 import { setActiveTabKey } from '../store/toolViewer-action';
 
 const FileManagerPage = () => {
   const dispatch = useDispatch();
   const activeTabKey = useSelector((state) => state.toolViewer.activeTabKey);
-
+  const { simulatedLevel } = useSelector((state) => state.userProfile);
   const handleTabChange = (key) => {
     dispatch(setActiveTabKey(key));
   };
+
+  const filteredTabs = Object.keys(FileManagerTabs)
+    .filter(key => FileManagerTabs[key].requiredLevel <= getLevelValue(simulatedLevel));
 
 
   return (

@@ -2,11 +2,15 @@
 import React from 'react';
 import { AutoComplete, Input } from 'antd';
 import { useHistory } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { TabsRoutesEnum } from '../../Config/AppRoutesConfig';
 import { setActiveTabKey } from '../../store/toolViewer-action';
+import { LOGIN_TIME_COOKIE, levels, getLevelValue } from '../../Config/UserProfileConfig';
+
 import './SearchAutoComplete.css'; // 导入 CSS 文件
 const SearchAutoComplete = ({ routes }) => {
+
+    const { simulatedLevel } = useSelector((state) => state.userProfile);
     console.log("123", routes)
     const history = useHistory();
     const dispatch = useDispatch();
@@ -48,13 +52,12 @@ const SearchAutoComplete = ({ routes }) => {
     const options = routes ? Object.values(routes)
         .filter(route => route.title !== TabsRoutesEnum.HOME.label) // 过滤掉 HOME
         .map((route) => {
-            console.log("route", route);
             const findItem = Object.values(TabsRoutesEnum).find((item) => item.label === route.title);
-            console.log("findItem", findItem);
-            const tabs = findItem && findItem.tabs ? Object.values(findItem.tabs).map((tab) =>
-                renderItem(tab.label, route.path, tab.key)
-            ) : [];
-            console.log("tabs", tabs)
+            const tabs = findItem && findItem.tabs ? Object.values(findItem.tabs)
+                .filter(tab => tab.requiredLevel <= getLevelValue(simulatedLevel)) // 依據使用者等級過濾tabs
+                .map((tab) =>
+                    renderItem(tab.label, route.path, tab.key)
+                ) : [];
             return {
                 label: renderTitle(route.title, route.path),
                 options: [...tabs],

@@ -1,11 +1,6 @@
 // src/Enum/TabsRoutesEnum.js
 import { HomeOutlined, SettingOutlined, BulbOutlined, FolderViewOutlined, AppstoreOutlined, ReadOutlined } from '@ant-design/icons';
-
-export const FileManagerTabsKeyEnum = {
-    ACTION: { key: 'action', label: 'Action' },
-    RECORD: { key: 'record', label: 'Record' },
-    SECS_CMD: { key: 'secsCmd', label: 'Secs Cmd' },
-};
+import { FileManagerTabsKeyEnum } from "../AppRoutesConfig";
 
 export const FileManagerTabs = {
     [FileManagerTabsKeyEnum.ACTION.key]: { label: FileManagerTabsKeyEnum.ACTION.label, icon: <AppstoreOutlined />, content: <div>Action Content</div> },
