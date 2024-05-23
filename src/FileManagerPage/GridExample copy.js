@@ -1,8 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { AgGridReact } from 'ag-grid-react';
-import "ag-grid-community/styles/ag-grid.css";
-import "ag-grid-community/styles/ag-theme-alpine.css";
-import 'ag-grid-enterprise';
+import { AgGridReact } from "@ag-grid-community/react";
+import "@ag-grid-community/styles/ag-grid.css";
+import "@ag-grid-community/styles/ag-theme-alpine.css";
 import { updateNodeType, addRowNode, removeSelectedNodes } from './NodeOperations';
 import { collectNodeData, pasteNode, flattenNodes } from './GridUtils';
 
@@ -26,8 +25,7 @@ const GridExample = () => {
     cellRenderer: 'agGroupCellRenderer',
     editable: true,
     cellEditor: "agTextCellEditor",
-    filter: 'agTextColumnFilter', // explicitly set filter type
-    floatingFilter: true,
+    filter: true,
     cellRendererParams: {
       suppressCount: false,
       checkbox: true,
@@ -44,34 +42,30 @@ const GridExample = () => {
       cellEditor: 'agSelectCellEditor',
       cellEditorParams: {
         values: ['LIST', 'A', 'U8', 'U4', "I4"]
-      },
-      filter: 'agTextColumnFilter', // explicitly set filter type
-      floatingFilter: true
+      }
     },
     {
       field: "value",
       headerName: "Value",
       editable: params => params.data.type !== 'LIST',
-      cellEditor: "agTextCellEditor",
-      filter: 'agTextColumnFilter', // explicitly set filter type
-      floatingFilter: true
+      cellEditor: "agTextCellEditor"
     }
   ], []);
 
   const gridOptions = useMemo(() => ({
     singleClickEdit: true,
     stopEditingWhenGridLosesFocus: true,
-    enableFilter: true,  // Ensure this option is enabled
+    enableFilter: true,
   }), []);
 
   const defaultColDef = useMemo(() => ({
     flex: 1,
     filter: true,
     floatingFilter: true,
-    editable: true
   }), []);
 
   const getDataPath = useCallback((data) => data.orgHierarchy, []);
+
   const getRowId = useCallback((params) => params.data.id, []);
 
   const onCellValueChanged = useCallback((event) => {
